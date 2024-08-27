@@ -13,7 +13,7 @@ const Navbar = () => {
   const isAdmin = false; // Replace with actual role-checking logic
 
   return (
-    <nav className="bg-white text-black p-4 flex justify-between items-center">
+    <nav className="bg-gray-100 text-black p-4 flex justify-between items-center">
       <div>
         <Link to="/" className="text-xl font-bold">
           <span className="bg-clip-text text-transparent bg-gradient-to-r from-blue-500 to-green-500">

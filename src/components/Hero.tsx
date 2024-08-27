@@ -19,7 +19,7 @@ export function Hero() {
       <p className="text-white text-center text-lg md:text-xl">
         Efficient, hassle-free room booking for all your meeting needs.
       </p>
-      <button className="mt-3 text-white bg-pink-500 px-4 py-2 rounded-full">
+      <button className="mt-3 text-white bg-pink-500 hover:bg-pink-600 px-4 py-2 rounded-full">
         <Link to="/meeting-rooms">Book Now</Link>
       </button>
       <div className="w-[40rem] h-40 relative">

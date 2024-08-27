@@ -1,14 +1,14 @@
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { useGetRoomsQuery } from "../redux/api/roomApi";
+import { Room } from "./utils/interface";
 import Lottie from "lottie-react";
-import { Room } from "../components/utils/interface";
 
 // URL to fetch Lottie animation JSON data
 const LOTTIE_URL =
   "https://lottie.host/0fea4ce6-8b86-47f0-89dd-fabfdeda9fbc/P8PHWLK1QD.json";
 
-const MeetingRoomsPage = () => {
+const FeaturedRooms = () => {
   const { data: rooms, isLoading, error } = useGetRoomsQuery(undefined);
   const [animationData, setAnimationData] = useState(null);
 
@@ -43,12 +43,15 @@ const MeetingRoomsPage = () => {
   if (error) return <p>Something went wrong!</p>;
   if (rooms?.data?.length === 0) return <p>No Rooms available right now!</p>;
 
+  // Limit to 3 rooms
+  const featuredRooms = rooms?.data?.slice(0, 3);
+
   return (
     <section className="py-12 bg-gray-100">
       <div className="container mx-auto text-center">
         <h2 className="text-3xl font-bold mb-8">Featured Rooms</h2>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {rooms?.data?.map((room: Room) => (
+          {featuredRooms?.map((room: Room) => (
             <div
               key={room._id}
               className="bg-white p-6 rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300"
@@ -85,4 +88,4 @@ const MeetingRoomsPage = () => {
   );
 };
 
-export default MeetingRoomsPage;
+export default FeaturedRooms;

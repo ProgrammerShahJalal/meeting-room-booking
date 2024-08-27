@@ -34,6 +34,16 @@ const Footer = () => {
             <h4 className="text-xl font-bold mb-4">Quick Links</h4>
             <ul>
               <li className="mb-2">
+                <Link to="/privacy-policy" className="hover:text-gray-400">
+                  Privacy Policy
+                </Link>
+              </li>
+              <li className="mb-2">
+                <Link to="/termsOfService" className="hover:text-gray-400">
+                  Terms of Service
+                </Link>
+              </li>
+              <li className="mb-2">
                 <Link to="/about-us" className="hover:text-gray-400">
                   About Us
                 </Link>

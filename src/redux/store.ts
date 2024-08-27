@@ -1,16 +1,13 @@
 import { configureStore } from "@reduxjs/toolkit";
-import { TypedUseSelectorHook, useDispatch, useSelector } from "react-redux";
-import authReducer from "./features/authSlice";
+import { roomApi } from "./api/roomApi";
 
 export const store = configureStore({
   reducer: {
-    auth: authReducer,
-    //We have to add more reducers as needed
+    [roomApi.reducerPath]: roomApi.reducer,
   },
+  middleware: (getDefaultMiddleware) =>
+    getDefaultMiddleware().concat(roomApi.middleware),
 });
 
 export type RootState = ReturnType<typeof store.getState>;
 export type AppDispatch = typeof store.dispatch;
-
-export const useAppDispatch = () => useDispatch<AppDispatch>();
-export const useAppSelector: TypedUseSelectorHook<RootState> = useSelector;
