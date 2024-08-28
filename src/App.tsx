@@ -10,6 +10,7 @@ import Footer from "./utils/Footer";
 import PrivacyPolicy from "./pages/PrivacyPolicy";
 import TermsOfService from "./pages/TermsOfService";
 import RoomDetails from "./pages/RoomDetails";
+import NotFoundPage from "./pages/NotFoundPage";
 
 export default function App() {
   return (
@@ -27,6 +28,7 @@ export default function App() {
             <Route path="/login" element={<LoginPage />} />
             <Route path="/privacy-policy" element={<PrivacyPolicy />} />
             <Route path="/termsOfService" element={<TermsOfService />} />
+            <Route path="*" element={<NotFoundPage />} />
           </Routes>
         </main>
         <Footer />
