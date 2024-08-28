@@ -1,16 +1,29 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { RootState } from "../redux/store";
+import { logout } from "../redux/features/authSlice";
 
 const Navbar = () => {
   const [menuOpen, setMenuOpen] = useState(false);
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
+  // Accessing the user and authentication status from Redux store
+  const user = useSelector((state: RootState) => state.auth.user);
+  const isAuthenticated = useSelector(
+    (state: RootState) => state.auth.isAuthenticated
+  );
+  const isAdmin = user?.role === "admin";
 
   const toggleMenu = () => {
     setMenuOpen(!menuOpen);
   };
 
-  // Placeholder for authentication and role-checking logic
-  const isAuthenticated = true; // Replace with actual authentication check
-  const isAdmin = false; // Replace with actual role-checking logic
+  const handleLogout = () => {
+    dispatch(logout()); // Dispatch the logout action to logout
+    navigate("/login"); // Redirect to the login page after logout
+  };
 
   return (
     <nav className="bg-gray-100 text-black p-4 flex justify-between items-center">
@@ -51,7 +64,7 @@ const Navbar = () => {
             to="/login"
             className="hover:text-green-500 active:text-purple-500 font-medium"
           >
-            Login
+            Login/Register
           </Link>
         ) : (
           <>
@@ -70,12 +83,12 @@ const Navbar = () => {
                 My Bookings
               </Link>
             )}
-            <Link
-              to="/logout"
+            <button
+              onClick={handleLogout}
               className="hover:text-green-500 active:text-purple-500 font-medium"
             >
               Logout
-            </Link>
+            </button>
           </>
         )}
       </div>
@@ -133,7 +146,7 @@ const Navbar = () => {
                 className="hover:text-green-500"
                 onClick={toggleMenu}
               >
-                Login
+                Login/Register
               </Link>
             ) : (
               <>
@@ -154,13 +167,15 @@ const Navbar = () => {
                     My Bookings
                   </Link>
                 )}
-                <Link
-                  to="/logout"
+                <button
+                  onClick={() => {
+                    handleLogout();
+                    toggleMenu();
+                  }}
                   className="hover:text-green-500"
-                  onClick={toggleMenu}
                 >
                   Logout
-                </Link>
+                </button>
               </>
             )}
           </div>

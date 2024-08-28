@@ -31,18 +31,25 @@ const LoginPage = () => {
     e.preventDefault();
     try {
       const result = await loginUser(formData).unwrap();
-      dispatch(loginSuccess(result.user)); // Save login status and user data in Redux
 
-      toast("Success!", {
-        className: "border-green-500 text-base",
-        description: result?.message,
-        duration: 3000,
-        icon: <IoCheckmarkDoneCircleOutline />,
-      });
+      const { data: user, token } = result; // Extracting user and token from result
 
-      const from =
-        (location.state as { from?: Location })?.from?.pathname || "/";
-      navigate(from); // Redirect to the requested page or home page
+      if (user && token) {
+        dispatch(loginSuccess({ user, token })); // Passing both user and token to loginSuccess
+
+        toast("Success!", {
+          className: "border-green-500 text-base",
+          description: result?.message,
+          duration: 3000,
+          icon: <IoCheckmarkDoneCircleOutline />,
+        });
+
+        const from =
+          (location.state as { from?: Location })?.from?.pathname || "/";
+        navigate(from); // Redirect to the requested page or home page
+      } else {
+        throw new Error("Login failed: No user or token returned");
+      }
     } catch (err) {
       console.log(err);
       const errorMessage =

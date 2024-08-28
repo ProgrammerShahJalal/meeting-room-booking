@@ -83,7 +83,7 @@ const RoomDetails = () => {
                   )}
                 </ul>
               </div>
-              <Link to={`/book-room/${room?.data?._id}`}>
+              <Link to={`/book-room/${room?._id}`}>
                 <button className="bg-green-500 text-white px-6 py-3 rounded-full hover:bg-green-600 transition-colors duration-300">
                   Book Now
                 </button>
