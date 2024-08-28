@@ -1,96 +1,129 @@
-import React, { useState } from "react";
+import { useState } from "react";
+import { useSignupUserMutation } from "../redux/api/authApi";
+import { toast } from "sonner";
+import { IoCheckmarkDoneCircleOutline } from "react-icons/io5";
+import { IoAlertCircleOutline } from "react-icons/io5";
 import { Link } from "react-router-dom";
 
-const SignUpPage: React.FC = () => {
-  const [name, setName] = useState("");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [phone, setPhone] = useState("");
-  const [address, setAddress] = useState("");
+const SignUpPage = () => {
+  const [formData, setFormData] = useState({
+    name: "",
+    email: "",
+    password: "",
+    phone: "",
+    address: "",
+  });
+  const [signupUser, { isLoading, error }] = useSignupUserMutation();
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setFormData({
+      ...formData,
+      [e.target.name]: e.target.value,
+    });
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // Add your signup logic here
+    try {
+      const result = await signupUser(formData).unwrap();
+      console.log("Signup successful:", result?.message);
+      toast("Success!", {
+        className: "border-green-500 text-base",
+        description: result?.message,
+        duration: 3000,
+        icon: <IoCheckmarkDoneCircleOutline />,
+      });
+
+      // Handle success (e.g., navigate to login or dashboard)
+    } catch (err) {
+      console.log(err);
+      // Extract error message
+      const errorMessage =
+        error && "status" in error
+          ? (error.data as { message?: string })?.message || "An error occurred"
+          : error?.message || "An unknown error occurred";
+
+      console.error("Signup failed:", errorMessage);
+
+      // Show error message in toast
+      toast("Signup Failed", {
+        className: "border-red-500 text-base",
+        description: errorMessage,
+        duration: 3000,
+        icon: <IoAlertCircleOutline />,
+      });
+    }
   };
 
   return (
-    <div className="container mx-auto py-12">
-      <h2 className="text-3xl font-bold text-center mb-8">Sign Up</h2>
+    <div className="flex justify-center items-center h-screen bg-pink-100">
       <form
         onSubmit={handleSubmit}
-        className="max-w-md mx-auto bg-white p-8 shadow-md rounded-lg"
+        className="bg-white p-8 rounded-xl shadow-lg w-full max-w-md"
       >
-        <div className="mb-4">
-          <label className="block text-gray-700 font-semibold mb-2">Name</label>
+        <h2 className="text-2xl font-bold mb-6 text-center">Sign Up</h2>
+        <div className="space-y-4">
           <input
             type="text"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-            className="w-full p-2 border rounded-lg"
+            name="name"
+            placeholder="Name"
+            value={formData.name}
+            onChange={handleChange}
+            className="w-full px-4 py-2 border rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-400"
             required
           />
-        </div>
-        <div className="mb-4">
-          <label className="block text-gray-700 font-semibold mb-2">
-            Email
-          </label>
           <input
             type="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            className="w-full p-2 border rounded-lg"
+            name="email"
+            placeholder="Email"
+            value={formData.email}
+            onChange={handleChange}
+            className="w-full px-4 py-2 border rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-400"
             required
           />
-        </div>
-        <div className="mb-4">
-          <label className="block text-gray-700 font-semibold mb-2">
-            Password
-          </label>
           <input
             type="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            className="w-full p-2 border rounded-lg"
+            name="password"
+            placeholder="Password"
+            value={formData.password}
+            onChange={handleChange}
+            className="w-full px-4 py-2 border rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-400"
             required
           />
-        </div>
-        <div className="mb-4">
-          <label className="block text-gray-700 font-semibold mb-2">
-            Phone Number
-          </label>
           <input
             type="text"
-            value={phone}
-            onChange={(e) => setPhone(e.target.value)}
-            className="w-full p-2 border rounded-lg"
+            name="phone"
+            placeholder="Phone"
+            value={formData.phone}
+            onChange={handleChange}
+            className="w-full px-4 py-2 border rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-400"
             required
           />
-        </div>
-        <div className="mb-4">
-          <label className="block text-gray-700 font-semibold mb-2">
-            Address
-          </label>
           <input
             type="text"
-            value={address}
-            onChange={(e) => setAddress(e.target.value)}
-            className="w-full p-2 border rounded-lg"
+            name="address"
+            placeholder="Address"
+            value={formData.address}
+            onChange={handleChange}
+            className="w-full px-4 py-2 border rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-400"
             required
           />
+          <button
+            type="submit"
+            disabled={isLoading}
+            className="w-full bg-blue-500 text-white py-2 rounded-xl hover:bg-blue-600 transition duration-300"
+          >
+            {isLoading ? "Signing Up..." : "Sign Up"}
+          </button>
         </div>
-        <button
-          type="submit"
-          className="w-full bg-blue-600 text-white p-2 rounded-lg font-semibold"
-        >
-          Sign Up
-        </button>
+        <h5 className="text-center mt-5">
+          {" "}
+          Already have an Account? Please{" "}
+          <Link className="text-blue-500 font-bold" to="/login">
+            Login
+          </Link>
+        </h5>
       </form>
-      <p className="text-center my-5">
-        Already have an account?{" "}
-        <Link className="text-blue-600" to="/signup">
-          Login Now
-        </Link>
-      </p>
     </div>
   );
 };
