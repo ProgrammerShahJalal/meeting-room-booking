@@ -45,7 +45,11 @@ const RoomDetails = () => {
     <section className="py-12 bg-gray-100">
       <div className="container mx-auto">
         <div className="w-2/4 mx-auto p-6">
-          <img src={room?.data?.image} alt="image of the room" />
+          <img
+            className="rounded-xl"
+            src={room?.data?.image}
+            alt="image of the room"
+          />
           <h1 className="text-3xl font-bold mb-4">{room?.data?.name}</h1>
           <p className="text-gray-600 mb-2">Room No: {room?.data?.roomNo}</p>
           <p className="text-gray-600 mb-2">Floor No: {room?.data?.floorNo}</p>

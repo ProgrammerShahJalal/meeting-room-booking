@@ -54,12 +54,12 @@ const FeaturedRooms = () => {
           {featuredRooms?.map((room: Room) => (
             <div
               key={room._id}
-              className="bg-white p-6 rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300"
+              className="bg-white p-6 rounded-xl shadow-md hover:shadow-lg transition-shadow duration-300"
             >
               <img
                 src={room.image}
                 alt={room.name}
-                className="w-full h-48 object-cover rounded-md mb-4"
+                className="w-full h-48 object-cover rounded-xl mb-4"
               />
               <h3 className="text-xl font-semibold mb-2">{room.name}</h3>
               <p className="text-gray-600 mb-1">
