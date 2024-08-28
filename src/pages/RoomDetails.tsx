@@ -1,11 +1,44 @@
 import { useParams } from "react-router-dom";
 import { useGetRoomByIdQuery } from "../redux/api/roomApi";
+import { useEffect, useState } from "react";
+import Lottie from "lottie-react";
+
+// URL to fetch Lottie animation JSON data
+const LOTTIE_URL =
+  "https://lottie.host/0fea4ce6-8b86-47f0-89dd-fabfdeda9fbc/P8PHWLK1QD.json";
 
 const RoomDetails = () => {
   const { id } = useParams<{ id: string }>();
   const { data: room, error, isLoading } = useGetRoomByIdQuery(id!);
+  const [animationData, setAnimationData] = useState(null);
 
-  if (isLoading) return <div>Loading...</div>;
+  useEffect(() => {
+    const fetchAnimationData = async () => {
+      try {
+        const response = await fetch(LOTTIE_URL);
+        const data = await response.json();
+        setAnimationData(data);
+      } catch (err) {
+        console.error("Failed to load Lottie animation data:", err);
+      }
+    };
+
+    fetchAnimationData();
+  }, []);
+
+  if (isLoading)
+    return (
+      <div className="flex justify-center items-center">
+        {animationData && (
+          <Lottie
+            animationData={animationData}
+            loop
+            autoplay
+            style={{ width: 200, height: 200 }}
+          />
+        )}
+      </div>
+    );
   if (error) return <div>Error loading room details.</div>;
   console.log("room", room);
   return (
