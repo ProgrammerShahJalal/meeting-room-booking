@@ -1,66 +1,29 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import axios from "axios";
+import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 interface AuthState {
+  isAuthenticated: boolean;
   user: null | object;
-  isLoading: boolean;
-  error: string | null;
 }
 
 const initialState: AuthState = {
+  isAuthenticated: false,
   user: null,
-  isLoading: false,
-  error: null,
 };
-
-export const signupUser = createAsyncThunk(
-  "auth/signup",
-  async (userData: any) => {
-    const response = await axios.post("/api/v1/auth/signup", userData);
-    return response.data;
-  }
-);
-
-export const loginUser = createAsyncThunk(
-  "auth/login",
-  async (credentials: any) => {
-    const response = await axios.post("/api/v1/auth/login", credentials);
-    return response.data;
-  }
-);
 
 const authSlice = createSlice({
   name: "auth",
   initialState,
-  reducers: {},
-  extraReducers: (builder) => {
-    builder
-      .addCase(signupUser.pending, (state) => {
-        state.isLoading = true;
-        state.error = null;
-      })
-      .addCase(signupUser.fulfilled, (state, action) => {
-        state.isLoading = false;
-        state.user = action.payload;
-      })
-      .addCase(signupUser.rejected, (state, action) => {
-        state.isLoading = false;
-        state.error = action.error.message || "Failed to sign up";
-      })
-      .addCase(loginUser.pending, (state) => {
-        state.isLoading = true;
-        state.error = null;
-      })
-      .addCase(loginUser.fulfilled, (state, action) => {
-        state.isLoading = false;
-        state.user = action.payload;
-      })
-      .addCase(loginUser.rejected, (state, action) => {
-        state.isLoading = false;
-        state.error = action.error.message || "Failed to log in";
-      });
+  reducers: {
+    loginSuccess(state, action: PayloadAction<object>) {
+      state.isAuthenticated = true;
+      state.user = action.payload;
+    },
+    logout(state) {
+      state.isAuthenticated = false;
+      state.user = null;
+    },
   },
 });
 
+export const { loginSuccess, logout } = authSlice.actions;
 export default authSlice.reducer;

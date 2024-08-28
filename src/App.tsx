@@ -11,6 +11,7 @@ import PrivacyPolicy from "./pages/PrivacyPolicy";
 import TermsOfService from "./pages/TermsOfService";
 import RoomDetails from "./pages/RoomDetails";
 import NotFoundPage from "./pages/NotFoundPage";
+import PrivateRoute from "./components/PrivateRoute";
 
 export default function App() {
   return (
@@ -23,7 +24,14 @@ export default function App() {
             <Route path="/about-us" element={<AboutUsPage />} />
             <Route path="/contact-us" element={<ContactUsPage />} />
             <Route path="/meeting-rooms" element={<MeetingRoomsPage />} />
-            <Route path="/rooms/:id" element={<RoomDetails />} />
+            <Route
+              path="/rooms/:id"
+              element={
+                <PrivateRoute>
+                  <RoomDetails />
+                </PrivateRoute>
+              }
+            />
             <Route path="/signup" element={<SignUpPage />} />
             <Route path="/login" element={<LoginPage />} />
             <Route path="/privacy-policy" element={<PrivacyPolicy />} />

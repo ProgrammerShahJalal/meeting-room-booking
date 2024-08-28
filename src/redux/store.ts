@@ -1,9 +1,11 @@
 import { configureStore } from "@reduxjs/toolkit";
 import { roomApi } from "./api/roomApi";
 import { authApi } from "./api/authApi";
+import authReduce from "./features/authSlice";
 
 export const store = configureStore({
   reducer: {
+    auth: authReduce,
     [roomApi.reducerPath]: roomApi.reducer,
     [authApi.reducerPath]: authApi.reducer,
   },

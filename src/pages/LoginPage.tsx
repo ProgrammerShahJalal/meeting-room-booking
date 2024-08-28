@@ -1,11 +1,14 @@
 import { useState } from "react";
 import { useLoginUserMutation } from "../redux/api/authApi";
+import { useDispatch } from "react-redux";
+import { useNavigate, useLocation } from "react-router-dom";
 import { toast } from "sonner";
 import {
   IoCheckmarkDoneCircleOutline,
   IoWarningOutline,
 } from "react-icons/io5";
 import { Link } from "react-router-dom";
+import { loginSuccess } from "../redux/features/authSlice";
 
 const LoginPage = () => {
   const [formData, setFormData] = useState({
@@ -13,6 +16,9 @@ const LoginPage = () => {
     password: "",
   });
   const [loginUser, { isLoading, error }] = useLoginUserMutation();
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const location = useLocation();
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({
@@ -25,7 +31,8 @@ const LoginPage = () => {
     e.preventDefault();
     try {
       const result = await loginUser(formData).unwrap();
-      console.log("Login successful:", result?.message);
+      dispatch(loginSuccess(result.user)); // Save login status and user data in Redux
+
       toast("Success!", {
         className: "border-green-500 text-base",
         description: result?.message,
@@ -33,14 +40,15 @@ const LoginPage = () => {
         icon: <IoCheckmarkDoneCircleOutline />,
       });
 
-      // Handle success (e.g., navigate to dashboard)
+      const from =
+        (location.state as { from?: Location })?.from?.pathname || "/";
+      navigate(from); // Redirect to the requested page or home page
     } catch (err) {
       console.log(err);
       const errorMessage =
         error && "status" in error
           ? (error.data as { message?: string })?.message || "An error occurred"
           : error?.message || "An unknown error occurred";
-      console.error("Login failed:", errorMessage);
       toast("Login Failed", {
         className: "border-red-500 text-base",
         description: errorMessage,
