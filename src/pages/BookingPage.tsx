@@ -1,27 +1,100 @@
 import React, { useState } from "react";
+import { useLocation } from "react-router-dom";
 import BookingForm from "../components/BookingForm";
 import UserInformationForm from "../components/UserInformationForm";
 import SubmitBooking from "../components/SubmitBooking";
+import BookingSummary from "../components/BookingSummary";
+import PaymentOptions from "../components/PaymentOptions";
+import ConfirmationModal from "../components/ConfirmationModal";
 
 const BookingPage: React.FC = () => {
+  const location = useLocation();
+  const room = location.state?.room;
+
   const [selectedSlotId, setSelectedSlotId] = useState<string | null>(null);
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
+  const [startTime, setStartTime] = useState<string | null>(null);
+  const [endTime, setEndTime] = useState<string | null>(null);
+  const [, setPaymentMethod] = useState<string>("");
+  const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
+  const [bookingDetails, setBookingDetails] = useState<{
+    roomName: string;
+    date: string;
+    time: string;
+    cost: number;
+  } | null>(null);
 
-  const handleSlotSelect = (slotId: string, date: Date) => {
+  const handleSlotSelect = (
+    slotId: string,
+    date: Date,
+    startTime: string,
+    endTime: string
+  ) => {
     setSelectedSlotId(slotId);
     setSelectedDate(date);
+    setStartTime(startTime);
+    setEndTime(endTime);
+  };
+
+  const handlePaymentMethodSelect = (method: string) => {
+    setPaymentMethod(method);
+  };
+
+  const handleBookingSuccess = (
+    roomName: string,
+    date: string,
+    time: string,
+    cost: number
+  ) => {
+    setBookingDetails({ roomName, date, time, cost });
+    setIsModalOpen(true);
+  };
+
+  const closeModal = () => {
+    setIsModalOpen(false);
   };
 
   return (
     <div className="container mx-auto p-4">
       <h1 className="text-4xl font-bold text-center mb-8">Book a Room</h1>
-      <BookingForm onSlotSelect={handleSlotSelect} />
-      <UserInformationForm />
-      {selectedSlotId && selectedDate && (
-        <SubmitBooking
-          selectedSlotId={selectedSlotId}
-          selectedDate={selectedDate}
-        />
+      {room ? (
+        <>
+          <BookingForm onSlotSelect={handleSlotSelect} roomId={room?._id} />
+          <UserInformationForm />
+          {selectedSlotId && selectedDate && startTime && endTime && (
+            <>
+              <BookingSummary
+                roomName={room.name}
+                selectedDate={selectedDate}
+                startTime={startTime}
+                endTime={endTime}
+                cost={room.pricePerSlot}
+              />
+              <PaymentOptions
+                onPaymentMethodSelect={handlePaymentMethodSelect}
+              />
+              <SubmitBooking
+                selectedSlotId={selectedSlotId}
+                selectedDate={selectedDate}
+                onBookingSuccess={handleBookingSuccess}
+                roomName={""}
+                startTime={""}
+                endTime={""}
+                paymentMethod={""}
+                cost={0}
+              />
+            </>
+          )}
+          <ConfirmationModal
+            isOpen={isModalOpen}
+            onClose={closeModal}
+            bookingDetails={bookingDetails!}
+          />
+        </>
+      ) : (
+        <div className="text-center text-red-500">
+          Room information not available.
+        </div>
       )}
     </div>
   );

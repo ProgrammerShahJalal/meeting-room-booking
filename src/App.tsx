@@ -12,6 +12,7 @@ import TermsOfService from "./pages/TermsOfService";
 import RoomDetails from "./pages/RoomDetails";
 import NotFoundPage from "./pages/NotFoundPage";
 import PrivateRoute from "./components/PrivateRoute";
+import BookingPage from "./pages/BookingPage";
 
 export default function App() {
   return (
@@ -29,6 +30,14 @@ export default function App() {
               element={
                 <PrivateRoute>
                   <RoomDetails />
+                </PrivateRoute>
+              }
+            />
+            <Route
+              path="/book-room/:id"
+              element={
+                <PrivateRoute>
+                  <BookingPage />
                 </PrivateRoute>
               }
             />

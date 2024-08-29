@@ -1,62 +1,109 @@
-// SubmitBooking.tsx
-import React, { useState } from "react";
+import React from "react";
+import { loadStripe } from "@stripe/stripe-js";
 import { useBookRoomMutation } from "../redux/api/bookingApi";
-import { useSelector } from "react-redux";
-import { RootState } from "../redux/store";
-import { toast } from "sonner";
-import { useGetRoomByIdQuery } from "../redux/api/roomApi";
-import { useParams } from "react-router-dom";
+
+// Load Stripe with your publishable API key
+const stripePromise = loadStripe(
+  "pk_test_51JwIBsFBTfTsSwmz8bqtyXmnIOlnITi40PZxeH94CVw4gw41R2R6chUyOdKef9J0CCNKuB22rOlGeVlfUcS2L9Nf008TuoJ83R"
+);
 
 interface SubmitBookingProps {
+  roomName: string;
   selectedSlotId: string;
   selectedDate: Date;
+  startTime: string;
+  endTime: string;
+  paymentMethod: string;
+  cost: number;
+  onBookingSuccess: (
+    roomName: string,
+    date: string,
+    time: string,
+    cost: number
+  ) => void;
 }
 
 const SubmitBooking: React.FC<SubmitBookingProps> = ({
+  roomName,
   selectedSlotId,
   selectedDate,
+  startTime,
+  endTime,
+  paymentMethod,
+  cost,
+  onBookingSuccess,
 }) => {
-  const user = useSelector((state: RootState) => state.auth.user);
-  const [bookRoom, { isLoading }] = useBookRoomMutation();
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const { id } = useParams<{ id: string }>();
-  const { data: room } = useGetRoomByIdQuery(id!);
+  const [bookRoom] = useBookRoomMutation();
 
   const handleBooking = async () => {
-    setIsSubmitting(true);
+    console.log("Confirm Booking button clicked");
 
-    if (!user || !room) {
-      toast.error("User or room data is missing");
-      setIsSubmitting(false);
-      return;
-    }
+    const bookingData = {
+      slotId: selectedSlotId,
+      date: selectedDate.toISOString(),
+      startTime,
+      endTime,
+      paymentMethod,
+      cost,
+    };
 
-    try {
-      await bookRoom({
-        room: room._id,
-        slots: [selectedSlotId],
-        user: user._id,
-        date: selectedDate.toISOString().split("T")[0],
-        totalAmount: room.pricePerSlot,
-      }).unwrap();
+    if (paymentMethod === "cash") {
+      console.log("Processing cash payment");
+      try {
+        await bookRoom(bookingData).unwrap();
+        console.log("Booking successful");
+        onBookingSuccess(
+          roomName,
+          selectedDate.toDateString(),
+          `${startTime} - ${endTime}`,
+          cost
+        );
+      } catch (error) {
+        console.error("Booking error:", error);
+      }
+    } else if (paymentMethod === "stripe") {
+      const stripe = await stripePromise;
 
-      toast.success("Booking successful!");
-    } catch (error) {
-      console.log(error);
-      toast.error("Booking failed");
-    } finally {
-      setIsSubmitting(false);
+      if (!stripe) {
+        console.error("Stripe.js has not loaded yet.");
+        return;
+      }
+
+      console.log("Creating Stripe checkout session");
+      try {
+        const response = await fetch("/create-checkout-session", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            amount: cost * 100, // amount in cents
+            bookingData, // Send the booking data to be associated with the Stripe session
+          }),
+        });
+
+        const session = await response.json();
+        console.log("Stripe session created", session);
+
+        // Redirect to Stripe Checkout
+        const { error } = await stripe.redirectToCheckout({
+          sessionId: session.id,
+        });
+
+        if (error) {
+          console.error("Stripe Checkout error:", error.message);
+        }
+      } catch (error) {
+        console.error("Error creating Stripe checkout session:", error);
+      }
     }
   };
 
   return (
-    <div className="flex justify-center mt-6">
+    <div>
       <button
         onClick={handleBooking}
-        disabled={isLoading || isSubmitting}
-        className="px-6 py-2 text-white bg-blue-500 rounded-lg hover:bg-blue-600"
+        className="bg-blue-500 text-white px-4 py-2 rounded-md"
       >
-        {isSubmitting ? "Submitting..." : "Confirm Booking"}
+        Confirm Booking
       </button>
     </div>
   );

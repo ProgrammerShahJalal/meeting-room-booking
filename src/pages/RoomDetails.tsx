@@ -3,7 +3,6 @@ import { useGetRoomByIdQuery } from "../redux/api/roomApi";
 import { useEffect, useState } from "react";
 import Lottie from "lottie-react";
 
-// URL to fetch Lottie animation JSON data
 const LOTTIE_URL =
   "https://lottie.host/0fea4ce6-8b86-47f0-89dd-fabfdeda9fbc/P8PHWLK1QD.json";
 
@@ -83,7 +82,10 @@ const RoomDetails = () => {
                   )}
                 </ul>
               </div>
-              <Link to={`/book-room/${room?._id}`}>
+              <Link
+                to={`/book-room/${room?.data?._id}`}
+                state={{ room: room?.data }}
+              >
                 <button className="bg-green-500 text-white px-6 py-3 rounded-full hover:bg-green-600 transition-colors duration-300">
                   Book Now
                 </button>

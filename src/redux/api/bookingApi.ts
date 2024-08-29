@@ -15,7 +15,8 @@ export const bookingApi = createApi({
   }),
   endpoints: (builder) => ({
     getAvailableSlots: builder.query({
-      query: (date: string) => `slots/availability?date=${date}`,
+      query: ({ date, roomId }: { date: string; roomId: string }) =>
+        `slots/availability?date=${date}&roomId=${roomId}`,
     }),
     bookRoom: builder.mutation({
       query: (bookingData) => ({

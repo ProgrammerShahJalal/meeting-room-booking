@@ -15,6 +15,12 @@ const UserInformationForm: React.FC = () => {
         <p className="mb-2">
           <strong>Email:</strong> {user?.email || ""}
         </p>
+        <p className="mb-2">
+          <strong>Phone:</strong> {user?.phone || ""}
+        </p>
+        <p className="mb-2">
+          <strong>Address:</strong> {user?.address || ""}
+        </p>
       </div>
     </div>
   );
