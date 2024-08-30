@@ -38,8 +38,12 @@ export const roomApi = createApi({
         method: "PUT",
         body,
       }),
-      invalidatesTags: (result, error, { id }) => [{ type: "Room", id }],
+      invalidatesTags: (result, error, { id }) => [
+        { type: "Room", id }, // Invalidate the specific room tag
+        "Room", // Invalidate the room list tag to trigger a re-fetch
+      ],
     }),
+
     deleteRoom: builder.mutation<void, string>({
       query: (id) => ({
         url: `rooms/${id}`,

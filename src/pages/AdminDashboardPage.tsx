@@ -1,8 +1,10 @@
 import React, { useState } from "react";
 import {
-  useGetRoomsQuery,
   useCreateRoomWithImageMutation,
+  useGetRoomsQuery,
 } from "../redux/api/roomApi";
+import { IoCheckmarkDoneCircleOutline } from "react-icons/io5";
+import { toast } from "sonner";
 import RoomListTable from "../components/RoomListTable";
 
 const AdminDashboardPage: React.FC = () => {
@@ -52,6 +54,13 @@ const AdminDashboardPage: React.FC = () => {
       const response = await createRoom(roomData).unwrap();
       console.log("Room created successfully:", response);
 
+      toast("Success!", {
+        className: "border-green-500 text-base",
+        description: "Room created successfully",
+        duration: 3000,
+        icon: <IoCheckmarkDoneCircleOutline />,
+      });
+
       // Reset form
       setNewRoom({
         name: "",
@@ -76,7 +85,6 @@ const AdminDashboardPage: React.FC = () => {
         <h2 className="text-lg font-semibold mb-4">Create Room</h2>
         <form onSubmit={handleSubmit}>
           <div className="grid grid-cols-2 gap-4">
-            {/* Form Fields */}
             <div>
               <label className="block mb-1 font-medium">Room Name</label>
               <input
@@ -88,8 +96,78 @@ const AdminDashboardPage: React.FC = () => {
                 className="border p-2 rounded-md w-full"
               />
             </div>
-            {/* Other fields ... */}
-            {/* Omitted for brevity */}
+
+            <div>
+              <label className="block mb-1 font-medium">Room No.</label>
+              <input
+                type="number"
+                name="roomNo"
+                placeholder="Room No."
+                value={newRoom.roomNo}
+                onChange={handleInputChange}
+                className="border p-2 rounded-md w-full"
+              />
+            </div>
+
+            <div>
+              <label className="block mb-1 font-medium">Floor No.</label>
+              <input
+                type="number"
+                name="floorNo"
+                placeholder="Floor No."
+                value={newRoom.floorNo}
+                onChange={handleInputChange}
+                className="border p-2 rounded-md w-full"
+              />
+            </div>
+
+            <div>
+              <label className="block mb-1 font-medium">Capacity</label>
+              <input
+                type="number"
+                name="capacity"
+                placeholder="Capacity"
+                value={newRoom.capacity}
+                onChange={handleInputChange}
+                className="border p-2 rounded-md w-full"
+              />
+            </div>
+
+            <div>
+              <label className="block mb-1 font-medium">Price Per Slot</label>
+              <input
+                type="number"
+                name="pricePerSlot"
+                placeholder="Price Per Slot"
+                value={newRoom.pricePerSlot}
+                onChange={handleInputChange}
+                className="border p-2 rounded-md w-full"
+              />
+            </div>
+
+            <div className="col-span-2">
+              <label className="block mb-1 font-medium">Amenities</label>
+              <input
+                type="text"
+                name="amenities"
+                placeholder="Amenities (comma separated)"
+                value={newRoom.amenities.join(",")}
+                onChange={handleInputChange}
+                className="border p-2 rounded-md w-full"
+              />
+            </div>
+
+            <div>
+              <label className="block mb-1 font-medium">Room Image URL</label>
+              <input
+                type="text"
+                name="imageUrl" // Corrected the name attribute
+                placeholder="Room Image URL"
+                value={newRoom.imageUrl}
+                onChange={handleInputChange}
+                className="border p-2 rounded-md w-full"
+              />
+            </div>
           </div>
           <button
             type="submit"
@@ -99,6 +177,8 @@ const AdminDashboardPage: React.FC = () => {
           </button>
         </form>
       </div>
+
+      {/* Other Room Management components */}
 
       {/* Room List Table */}
       {!isLoading && rooms && <RoomListTable rooms={rooms} />}
