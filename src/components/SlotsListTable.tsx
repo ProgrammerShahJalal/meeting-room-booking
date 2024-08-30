@@ -51,16 +51,16 @@ const SlotsListTable: React.FC<SlotsListTableProps> = () => {
   if (error) return <div>Error loading slots.</div>;
 
   return (
-    <div>
-      <table className="min-w-full bg-white">
+    <div className="overflow-x-auto">
+      <table className="min-w-full bg-white rounded-xl">
         <thead>
           <tr>
-            <th className="py-2">Room Name</th>
-            <th className="py-2">Room No.</th>
-            <th className="py-2">Date</th>
-            <th className="py-2">Start Time</th>
-            <th className="py-2">End Time</th>
-            <th className="py-2">Actions</th>
+            <th className="py-2 px-4 text-left">Room Name</th>
+            <th className="py-2 px-4 text-left">Room No.</th>
+            <th className="py-2 px-4 text-left">Date</th>
+            <th className="py-2 px-4 text-left">Start Time</th>
+            <th className="py-2 px-4 text-left">End Time</th>
+            <th className="py-2 px-4 text-left">Actions</th>
           </tr>
         </thead>
         <tbody>
@@ -71,7 +71,7 @@ const SlotsListTable: React.FC<SlotsListTableProps> = () => {
               <td className="border px-4 py-2">{slot?.date}</td>
               <td className="border px-4 py-2">{slot?.startTime}</td>
               <td className="border px-4 py-2">{slot?.endTime}</td>
-              <td className="border px-4 py-2 flex justify-around">
+              <td className="border px-4 py-2 flex justify-around gap-3">
                 <button
                   onClick={() => setSelectedSlot(slot)}
                   className="bg-yellow-500 text-white px-2 py-1 rounded-md"

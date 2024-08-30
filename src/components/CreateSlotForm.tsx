@@ -35,51 +35,54 @@ const CreateSlotForm: React.FC = () => {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="bg-white p-4 rounded-md">
-      <div>
-        <h2 className="text-lg font-semibold mb-4">Create Slot</h2>
-        <label>Room ID</label>
+    <form
+      onSubmit={handleSubmit}
+      className="p-4 rounded-md max-w-lg mx-auto mb-5"
+    >
+      <h2 className="text-xl font-semibold mb-4">Create Slot</h2>
+      <div className="mb-4">
+        <label className="block mb-1">Room ID</label>
         <input
           type="text"
           name="room"
           value={formData.room}
           onChange={handleChange}
-          className="border p-2 rounded-md"
+          className="border p-2 rounded-md w-full"
         />
       </div>
-      <div>
-        <label>Date</label>
+      <div className="mb-4">
+        <label className="block mb-1">Date</label>
         <input
           type="date"
           name="date"
           value={formData.date}
           onChange={handleChange}
-          className="border p-2 rounded-md"
+          className="border p-2 rounded-md w-full"
         />
       </div>
-      <div>
-        <label>Start Time</label>
+      <div className="mb-4">
+        <label className="block mb-1">Start Time</label>
         <input
           type="time"
           name="startTime"
           value={formData.startTime}
           onChange={handleChange}
-          className="border p-2 rounded-md"
+          className="border p-2 rounded-md w-full"
         />
       </div>
-      <div>
-        <label>End Time</label>
+      <div className="mb-4">
+        <label className="block mb-1">End Time</label>
         <input
           type="time"
           name="endTime"
           value={formData.endTime}
           onChange={handleChange}
-          className="border p-2 rounded-md"
+          className="border p-2 rounded-md w-full"
         />
       </div>
       <button
         type="submit"
-        className="bg-blue-500 text-white p-2 rounded-md mt-2"
+        className="bg-blue-500 text-white p-2 rounded-md w-full mt-2"
       >
         Create Slots
       </button>

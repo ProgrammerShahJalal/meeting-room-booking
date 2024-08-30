@@ -46,8 +46,8 @@ const RoomListTable: React.FC<RoomListTableProps> = ({ rooms }) => {
   };
 
   return (
-    <div>
-      <table className="min-w-full bg-white">
+    <div className="overflow-x-auto">
+      <table className="min-w-full bg-white rounded-xl">
         <thead>
           <tr>
             <th className="py-2">Room Name</th>
@@ -66,7 +66,7 @@ const RoomListTable: React.FC<RoomListTableProps> = ({ rooms }) => {
               <td className="border px-4 py-2">{room.floorNo}</td>
               <td className="border px-4 py-2">{room.capacity}</td>
               <td className="border px-4 py-2">{room.pricePerSlot}</td>
-              <td className="border px-4 py-2 flex justify-around">
+              <td className="border px-4 py-2 flex justify-around gap-3">
                 <button
                   onClick={() => setSelectedRoom(room)} // Set selected room
                   className="bg-yellow-500 text-white px-2 py-1 rounded-md"

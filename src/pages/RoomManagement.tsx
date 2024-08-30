@@ -77,12 +77,12 @@ const RoomManagement: React.FC = () => {
   };
 
   return (
-    <div className="p-6">
-      <h1 className="text-2xl font-bold mb-6">Room Management</h1>
+    <div className="px-12 py-16 bg-purple-100">
+      <h1 className="text-2xl font-bold text-center mb-6">Room Management</h1>
 
       {/* Create Room Form */}
       <div className="mb-6">
-        <h2 className="text-lg font-semibold mb-4">Create Room</h2>
+        <h2 className="text-xl font-semibold text-center mb-4">Create Room</h2>
         <form onSubmit={handleSubmit}>
           <div className="grid grid-cols-2 gap-4">
             <div>
