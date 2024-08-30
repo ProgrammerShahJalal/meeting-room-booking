@@ -5,9 +5,11 @@ import {
   useGetAllBookingsQuery,
   useUpdateBookingMutation,
 } from "../redux/api/bookingApi";
+import { useGetAllSlotsQuery } from "../redux/api/slotsApi";
 
 const BookingManagement: React.FC = () => {
   const { data: bookingsData, isLoading } = useGetAllBookingsQuery();
+  const { data: slotsData } = useGetAllSlotsQuery();
   const [updateBooking] = useUpdateBookingMutation();
   const [deleteBooking] = useDeleteBookingMutation();
   const [confirmModalVisible, setConfirmModalVisible] = useState(false);
@@ -53,6 +55,24 @@ const BookingManagement: React.FC = () => {
     }
   };
 
+  const formatDate = (dateString: string, slotIds: string[]) => {
+    const date = new Date(dateString);
+    const formattedDate = date.toDateString(); // Format like "Thu Oct 14 2024"
+
+    // Filter slots by IDs and create a time range string
+    const timeRange = slotIds
+      .map((slotId) => {
+        const slot = slotsData?.data.find(
+          (slot: any) => slot._id.$oid === slotId
+        );
+        return slot ? `${slot.startTime} - ${slot.endTime}` : null;
+      })
+      .filter(Boolean)
+      .join(", ");
+
+    return `${formattedDate}, ${timeRange}`;
+  };
+
   const columns = [
     {
       title: "Room Name",
@@ -69,7 +89,10 @@ const BookingManagement: React.FC = () => {
       dataIndex: "date",
       key: "date",
       render: (text: string, record: any) =>
-        `${text} (${record.slots.join(", ")})`,
+        formatDate(
+          text,
+          record.slots.map((slot: any) => slot._id.$oid)
+        ),
     },
     {
       title: "Status",
@@ -114,6 +137,8 @@ const BookingManagement: React.FC = () => {
         Booking Management
       </h2>
       <Table
+        scroll={{ x: true }}
+        pagination={{ pageSize: 10 }}
         dataSource={bookingsData?.data || []}
         columns={columns}
         rowKey={(record) => record._id}

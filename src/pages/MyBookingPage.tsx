@@ -1,54 +1,152 @@
-import React from "react";
-import { useGetUserBookingsQuery } from "../redux/api/bookingApi";
+import React, { useState } from "react";
+import { Button, Table, Modal, notification } from "antd";
+import {
+  useDeleteBookingMutation,
+  useGetAllBookingsQuery,
+  useUpdateBookingMutation,
+} from "../redux/api/bookingApi";
 
-const MyBookingPage: React.FC = () => {
-  const { data, error, isLoading } = useGetUserBookingsQuery();
+const BookingManagement: React.FC = () => {
+  const { data: bookingsData, isLoading } = useGetAllBookingsQuery();
+  const [updateBooking] = useUpdateBookingMutation();
+  const [deleteBooking] = useDeleteBookingMutation();
+  const [confirmModalVisible, setConfirmModalVisible] = useState(false);
+  const [selectedBookingId, setSelectedBookingId] = useState<string | null>(
+    null
+  );
 
-  if (isLoading) return <div>Loading...</div>;
-  if (error) return <div>Error loading bookings.</div>;
+  const handleApprove = async (id: string) => {
+    try {
+      await updateBooking({ _id: id, isConfirmed: "confirmed" });
+      notification.success({ message: "Booking approved successfully" });
+    } catch (error) {
+      console.log(error);
+      notification.error({ message: "Failed to approve booking" });
+    }
+  };
 
-  const bookings = data?.data || [];
+  const handleReject = async (id: string) => {
+    try {
+      await updateBooking({ _id: id, isConfirmed: "unconfirmed" });
+      notification.success({ message: "Booking rejected successfully" });
+    } catch (error) {
+      console.log(error);
+      notification.error({ message: "Failed to reject booking" });
+    }
+  };
+
+  const handleDelete = (id: string) => {
+    setSelectedBookingId(id);
+    setConfirmModalVisible(true);
+  };
+
+  const confirmDelete = async () => {
+    if (!selectedBookingId) return;
+    try {
+      await deleteBooking(selectedBookingId);
+      notification.success({ message: "Booking deleted successfully" });
+      setConfirmModalVisible(false);
+      setSelectedBookingId(null);
+    } catch (error) {
+      console.log(error);
+      notification.error({ message: "Failed to delete booking" });
+    }
+  };
+
+  const formatDate = (dateString: string, slots: any[]) => {
+    const date = new Date(dateString);
+    const formattedDate = date.toDateString(); // Format like "Thu Oct 14 2024"
+
+    // Assuming `slots` contains objects with `startTime` and `endTime`
+    const timeRange = slots
+      .map((slot) => `${slot.startTime} - ${slot.endTime}`)
+      .join(", ");
+
+    return `${formattedDate}, ${timeRange}`;
+  };
+
+  console.log("timerange", TimeRanges);
+
+  const columns = [
+    {
+      title: "Room Name",
+      dataIndex: ["room", "name"],
+      key: "roomName",
+    },
+    {
+      title: "User Name",
+      dataIndex: ["user", "name"],
+      key: "userName",
+    },
+    {
+      title: "Date & Time",
+      dataIndex: "date",
+      key: "date",
+      render: (text: string, record: any) => formatDate(text, record.slots),
+    },
+    {
+      title: "Status",
+      dataIndex: "isConfirmed",
+      key: "status",
+      render: (text: string) =>
+        text === "confirmed" ? "Confirmed" : "Unconfirmed",
+    },
+    {
+      title: "Actions",
+      key: "actions",
+      render: (text: string, record: any) => (
+        <span>
+          <Button
+            type="primary"
+            onClick={() => handleApprove(record._id)}
+            disabled={record.isConfirmed === "confirmed"}
+          >
+            Approve
+          </Button>
+          <Button
+            type="default"
+            onClick={() => handleReject(record._id)}
+            disabled={record.isConfirmed === "unconfirmed"}
+          >
+            Reject
+          </Button>
+          <button
+            className="px-4 py-1 bg-red-500"
+            onClick={() => handleDelete(record._id)}
+          >
+            Delete
+          </button>
+        </span>
+      ),
+    },
+  ];
 
   return (
-    <div className="bg-purple-100 px-16 py-12">
-      <h1 className="text-2xl font-bold mb-4">My Bookings</h1>
-      {bookings?.length === 0 ? (
-        <p>No bookings found.</p>
-      ) : (
-        <ul className="grid grid-cols-1 md:grid-cols-3 justify-center items-center gap-4 md:gap-16">
-          {bookings.map((booking, index) => (
-            <li
-              key={index}
-              className="mb-4 p-4 border rounded-xl shadow-sm bg-white"
-            >
-              <h2 className="text-lg font-semibold">{booking?.room?.name}</h2>
-              <p>
-                Room No: {booking?.room?.roomNo} - Floor:{" "}
-                {booking?.room?.floorNo}
-              </p>
-              <p>
-                Date: {new Date(booking?.date).toDateString()}
-                <br />
-                Time: {booking?.slots[0]?.startTime} -{" "}
-                {booking?.slots[0]?.endTime}
-                <br />
-                Status:{" "}
-                <span
-                  className={
-                    booking?.isConfirmed === "confirmed"
-                      ? "text-green-600"
-                      : "text-red-600"
-                  }
-                >
-                  {booking.isConfirmed}
-                </span>
-              </p>
-            </li>
-          ))}
-        </ul>
-      )}
-    </div>
+    <>
+      <h2 className="text-2xl font-bold text-center mb-6">
+        Booking Management
+      </h2>
+      <Table
+        scroll={{ x: true }}
+        pagination={{ pageSize: 10 }}
+        dataSource={bookingsData?.data || []}
+        columns={columns}
+        rowKey={(record) => record._id}
+        loading={isLoading}
+      />
+
+      <Modal
+        title="Confirm Delete"
+        visible={confirmModalVisible}
+        onOk={confirmDelete}
+        onCancel={() => setConfirmModalVisible(false)}
+        okText="Delete"
+        cancelText="Cancel"
+      >
+        <p>Are you sure you want to delete this booking?</p>
+      </Modal>
+    </>
   );
 };
 
-export default MyBookingPage;
+export default BookingManagement;
