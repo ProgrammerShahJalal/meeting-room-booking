@@ -6,12 +6,14 @@ import SubmitBooking from "../components/SubmitBooking";
 import BookingSummary from "../components/BookingSummary";
 import PaymentOptions from "../components/PaymentOptions";
 import ConfirmationModal from "../components/ConfirmationModal";
+import { RootState } from "../redux/store";
+import { useSelector } from "react-redux";
 
 const BookingPage: React.FC = () => {
   const location = useLocation();
   const room = location.state?.room;
 
-  const [selectedSlotId, setSelectedSlotId] = useState<string | null>(null);
+  const [selectedSlotId, setSelectedSlotId] = useState<string[]>([]);
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
   const [startTime, setStartTime] = useState<string | null>(null);
   const [endTime, setEndTime] = useState<string | null>(null);
@@ -25,7 +27,7 @@ const BookingPage: React.FC = () => {
   } | null>(null);
 
   const handleSlotSelect = (
-    slotId: string,
+    slotId: string[],
     date: Date,
     startTime: string,
     endTime: string
@@ -54,6 +56,8 @@ const BookingPage: React.FC = () => {
     setIsModalOpen(false);
   };
 
+  const user = useSelector((state: RootState) => state.auth.user);
+
   return (
     <div className="container mx-auto p-4">
       <h1 className="text-4xl font-bold text-center mb-8">Book a Room</h1>
@@ -74,14 +78,15 @@ const BookingPage: React.FC = () => {
                 onPaymentMethodSelect={handlePaymentMethodSelect}
               />
               <SubmitBooking
+                user={user}
                 selectedSlotId={selectedSlotId}
                 selectedDate={selectedDate}
                 onBookingSuccess={handleBookingSuccess}
-                roomName={""}
-                startTime={""}
-                endTime={""}
+                roomName={room?.name}
+                startTime={startTime}
+                endTime={endTime}
                 paymentMethod={""}
-                cost={0}
+                cost={room.pricePerSlot}
               />
             </>
           )}

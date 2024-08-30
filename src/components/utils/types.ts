@@ -19,7 +19,7 @@ export interface Room {
   isDeleted?: boolean;
   createdAt?: string;
   updatedAt?: string;
-  image?: string;
+  imageUrl: string;
   data?: Room;
 }
 

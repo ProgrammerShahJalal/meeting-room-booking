@@ -13,6 +13,9 @@ import RoomDetails from "./pages/RoomDetails";
 import NotFoundPage from "./pages/NotFoundPage";
 import PrivateRoute from "./components/PrivateRoute";
 import BookingPage from "./pages/BookingPage";
+import MyBookingPage from "./pages/MyBookingPage";
+import AdminRoute from "./components/AdminRoute";
+import AdminDashboardPage from "./pages/AdminDashboardPage";
 
 export default function App() {
   return (
@@ -26,6 +29,14 @@ export default function App() {
             <Route path="/contact-us" element={<ContactUsPage />} />
             <Route path="/meeting-rooms" element={<MeetingRoomsPage />} />
             <Route
+              path="/dashboard"
+              element={
+                <AdminRoute>
+                  <AdminDashboardPage />
+                </AdminRoute>
+              }
+            />
+            <Route
               path="/rooms/:id"
               element={
                 <PrivateRoute>
@@ -38,6 +49,14 @@ export default function App() {
               element={
                 <PrivateRoute>
                   <BookingPage />
+                </PrivateRoute>
+              }
+            />
+            <Route
+              path="/my-bookings"
+              element={
+                <PrivateRoute>
+                  <MyBookingPage />
                 </PrivateRoute>
               }
             />

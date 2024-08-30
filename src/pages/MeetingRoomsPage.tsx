@@ -2,8 +2,8 @@ import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { useGetRoomsQuery } from "../redux/api/roomApi";
 import Lottie from "lottie-react";
-import { Room } from "../components/utils/interface";
 import { useDebounce } from "../hooks/useDebounce";
+import { Room } from "../components/utils/types";
 
 // URL to fetch Lottie animation JSON data
 const LOTTIE_URL =
@@ -72,7 +72,7 @@ const MeetingRoomsPage = () => {
     );
 
   if (error) return <p>Something went wrong!</p>;
-  if (rooms?.data?.length === 0) return <p>No Rooms available right now!</p>;
+  if (rooms?.length === 0) return <p>No Rooms available right now!</p>;
 
   return (
     <section className="py-12 bg-pink-100">
@@ -122,7 +122,7 @@ const MeetingRoomsPage = () => {
               className="bg-white p-6 rounded-xl shadow-md hover:shadow-lg transition-shadow duration-300"
             >
               <img
-                src={room.image}
+                src={room.imageUrl}
                 alt={room.name}
                 className="w-full h-48 object-cover rounded-xl mb-4"
               />

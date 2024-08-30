@@ -9,7 +9,8 @@ export interface Room {
   isDeleted: boolean;
   createdAt: string;
   updatedAt: string;
-  image?: string; // if image is optional
+  imageUrl: string | undefined;
+  data?: Room;
 }
 
 export interface RoomResponse {

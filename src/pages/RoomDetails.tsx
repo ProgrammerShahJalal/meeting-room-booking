@@ -54,7 +54,7 @@ const RoomDetails = () => {
             <div className="w-full md:w-1/2">
               <img
                 className="rounded-xl shadow-lg"
-                src={room?.data?.image}
+                src={room?.data?.imageUrl}
                 alt={room?.data?.name}
               />
             </div>

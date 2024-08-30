@@ -57,7 +57,7 @@ const FeaturedRooms = () => {
               className="bg-white p-6 rounded-xl shadow-md hover:shadow-lg transition-shadow duration-300"
             >
               <img
-                src={room.image}
+                src={room.imageUrl}
                 alt={room.name}
                 className="w-full h-48 object-cover rounded-xl mb-4"
               />

@@ -3,9 +3,12 @@ import { useSignupUserMutation } from "../redux/api/authApi";
 import { toast } from "sonner";
 import { IoCheckmarkDoneCircleOutline } from "react-icons/io5";
 import { IoAlertCircleOutline } from "react-icons/io5";
-import { Link } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 
 const SignUpPage = () => {
+  const navigate = useNavigate();
+  const location = useLocation();
+
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -34,7 +37,9 @@ const SignUpPage = () => {
         icon: <IoCheckmarkDoneCircleOutline />,
       });
 
-      // Handle success (e.g., navigate to login or dashboard)
+      const from =
+        (location.state as { from?: Location })?.from?.pathname || "/";
+      navigate(from); // Redirect to the requested page or home page
     } catch (err) {
       console.log(err);
       // Extract error message
