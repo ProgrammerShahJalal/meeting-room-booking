@@ -117,11 +117,12 @@ const BookingManagement: React.FC = () => {
             type="default"
             onClick={() => handleReject(record._id)}
             disabled={record.isConfirmed === "unconfirmed"}
+            className="mx-2"
           >
             Reject
           </Button>
           <button
-            className="px-4 py-1 bg-red-500"
+            className="px-4 py-1 rounded-xl bg-red-500"
             onClick={() => handleDelete(record._id)}
           >
             Delete
@@ -133,7 +134,7 @@ const BookingManagement: React.FC = () => {
 
   return (
     <>
-      <h2 className="text-2xl font-bold text-center mb-6">
+      <h2 className="text-2xl font-bold text-center mb-6 mt-10">
         Booking Management
       </h2>
       <Table
@@ -143,6 +144,7 @@ const BookingManagement: React.FC = () => {
         columns={columns}
         rowKey={(record) => record._id}
         loading={isLoading}
+        className="mx-12"
       />
 
       <Modal
