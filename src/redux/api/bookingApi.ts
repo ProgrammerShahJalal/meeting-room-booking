@@ -26,6 +26,11 @@ export const bookingApi = createApi({
   }),
   tagTypes: ["Booking"],
   endpoints: (builder) => ({
+    getAvailableSlots: builder.query({
+      query: ({ date, roomId }: { date: string; roomId: string }) =>
+        `slots/availability?date=${date}&roomId=${roomId}`,
+    }),
+
     createBooking: builder.mutation<{ data: Booking }, Partial<Booking>>({
       query: (booking) => ({
         url: "/bookings",
@@ -70,6 +75,7 @@ export const bookingApi = createApi({
 });
 
 export const {
+  useGetAvailableSlotsQuery,
   useCreateBookingMutation,
   useGetAllBookingsQuery,
   useGetUserBookingsQuery,
