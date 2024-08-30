@@ -1,9 +1,11 @@
-import AdminRoomManagement from "./AdminDashboardPage";
+import RoomManagement from "./RoomManagement";
+import SlotsManagement from "./SlotsManagement";
 
 const AdminDashboardMain = () => {
   return (
     <div>
-      <AdminRoomManagement />
+      <RoomManagement />
+      <SlotsManagement />
     </div>
   );
 };

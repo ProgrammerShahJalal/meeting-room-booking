@@ -6,7 +6,7 @@ import {
 import { Room } from "./utils/types";
 import { IoCheckmarkDoneCircleOutline } from "react-icons/io5";
 import { toast } from "sonner";
-import UpdateRoomPopup from "./UpdateRoomPopup"; // Import the popup component
+import UpdateRoomPopup from "./UpdateRoomPopup";
 
 interface RoomListTableProps {
   rooms: Room[];

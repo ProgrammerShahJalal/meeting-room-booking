@@ -15,7 +15,7 @@ import PrivateRoute from "./components/PrivateRoute";
 import BookingPage from "./pages/BookingPage";
 import MyBookingPage from "./pages/MyBookingPage";
 import AdminRoute from "./components/AdminRoute";
-import AdminDashboardPage from "./pages/AdminDashboardPage";
+import AdminDashboardMain from "./pages/AdminDashboardMain";
 
 export default function App() {
   return (
@@ -32,7 +32,7 @@ export default function App() {
               path="/dashboard"
               element={
                 <AdminRoute>
-                  <AdminDashboardPage />
+                  <AdminDashboardMain />
                 </AdminRoute>
               }
             />

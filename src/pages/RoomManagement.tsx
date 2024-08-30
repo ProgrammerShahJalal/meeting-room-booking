@@ -7,7 +7,7 @@ import { IoCheckmarkDoneCircleOutline } from "react-icons/io5";
 import { toast } from "sonner";
 import RoomListTable from "../components/RoomListTable";
 
-const AdminDashboardPage: React.FC = () => {
+const RoomManagement: React.FC = () => {
   const { data: rooms, isLoading } = useGetRoomsQuery();
   const [newRoom, setNewRoom] = useState({
     name: "",
@@ -186,4 +186,4 @@ const AdminDashboardPage: React.FC = () => {
   );
 };
 
-export default AdminDashboardPage;
+export default RoomManagement;
