@@ -12,8 +12,6 @@ import TermsOfService from "./pages/TermsOfService";
 import RoomDetails from "./pages/RoomDetails";
 import NotFoundPage from "./pages/NotFoundPage";
 import PrivateRoute from "./components/PrivateRoute";
-import BookingPage from "./pages/BookingPage";
-import MyBookingPage from "./pages/MyBookingPage";
 import AdminRoute from "./components/AdminRoute";
 import AdminDashboardMain from "./pages/AdminDashboardMain";
 import ScrollToTopButton from "./components/ScrollToTopButton";
@@ -45,22 +43,7 @@ export default function App() {
                 </PrivateRoute>
               }
             />
-            <Route
-              path="/book-room/:id"
-              element={
-                <PrivateRoute>
-                  <BookingPage />
-                </PrivateRoute>
-              }
-            />
-            <Route
-              path="/my-bookings"
-              element={
-                <PrivateRoute>
-                  <MyBookingPage />
-                </PrivateRoute>
-              }
-            />
+
             <Route path="/signup" element={<SignUpPage />} />
             <Route path="/login" element={<LoginPage />} />
             <Route path="/privacy-policy" element={<PrivacyPolicy />} />

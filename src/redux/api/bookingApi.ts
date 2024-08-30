@@ -1,10 +1,21 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import { RootState } from "../store";
 
+interface Booking {
+  _id: string;
+  date: string;
+  slots: string[];
+  room: string;
+  user: string;
+  totalAmount: number;
+  isConfirmed: "confirmed" | "unconfirmed";
+  isDeleted: boolean;
+}
+
 export const bookingApi = createApi({
   reducerPath: "bookingApi",
   baseQuery: fetchBaseQuery({
-    baseUrl: "https://meeting-room-booking-gilt.vercel.app/api/",
+    baseUrl: "/api",
     prepareHeaders: (headers, { getState }) => {
       const token = (getState() as RootState).auth.token;
       if (token) {
@@ -13,19 +24,57 @@ export const bookingApi = createApi({
       return headers;
     },
   }),
+  tagTypes: ["Booking"],
   endpoints: (builder) => ({
-    getAvailableSlots: builder.query({
-      query: ({ date, roomId }: { date: string; roomId: string }) =>
-        `slots/availability?date=${date}&roomId=${roomId}`,
-    }),
-    bookRoom: builder.mutation({
-      query: (bookingData) => ({
-        url: "bookings",
+    createBooking: builder.mutation<{ data: Booking }, Partial<Booking>>({
+      query: (booking) => ({
+        url: "/bookings",
         method: "POST",
-        body: bookingData,
+        body: booking,
       }),
+      invalidatesTags: ["Booking"],
+    }),
+    getAllBookings: builder.query<{ data: Booking[] }, void>({
+      query: () => ({
+        url: "/bookings",
+        method: "GET",
+      }),
+      providesTags: ["Booking"],
+    }),
+    getUserBookings: builder.query<{ data: Booking[] }, void>({
+      query: () => ({
+        url: "/my-bookings",
+        method: "GET",
+      }),
+      providesTags: ["Booking"],
+    }),
+    updateBooking: builder.mutation<
+      { data: Booking },
+      Partial<Booking> & Pick<Booking, "_id">
+    >({
+      query: ({ _id, ...patch }) => ({
+        url: `/bookings/${_id}`,
+        method: "PUT",
+        body: patch,
+      }),
+      invalidatesTags: ["Booking"],
+    }),
+    deleteBooking: builder.mutation<{ data: Booking }, string>({
+      query: (id) => ({
+        url: `/bookings/${id}`,
+        method: "DELETE",
+      }),
+      invalidatesTags: ["Booking"],
     }),
   }),
 });
 
-export const { useGetAvailableSlotsQuery, useBookRoomMutation } = bookingApi;
+export const {
+  useCreateBookingMutation,
+  useGetAllBookingsQuery,
+  useGetUserBookingsQuery,
+  useUpdateBookingMutation,
+  useDeleteBookingMutation,
+} = bookingApi;
+
+export default bookingApi;

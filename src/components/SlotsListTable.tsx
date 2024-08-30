@@ -55,12 +55,12 @@ const SlotsListTable: React.FC<SlotsListTableProps> = () => {
       <table className="min-w-full bg-white rounded-xl">
         <thead>
           <tr>
-            <th className="py-2 px-4 text-left">Room Name</th>
-            <th className="py-2 px-4 text-left">Room No.</th>
-            <th className="py-2 px-4 text-left">Date</th>
-            <th className="py-2 px-4 text-left">Start Time</th>
-            <th className="py-2 px-4 text-left">End Time</th>
-            <th className="py-2 px-4 text-left">Actions</th>
+            <th className="py-2 px-4 text-center">Room Name</th>
+            <th className="py-2 px-4 text-center">Room No.</th>
+            <th className="py-2 px-4 text-center">Date</th>
+            <th className="py-2 px-4 text-center">Start Time</th>
+            <th className="py-2 px-4 text-center">End Time</th>
+            <th className="py-2 px-4 text-center">Actions</th>
           </tr>
         </thead>
         <tbody>

@@ -1,3 +1,4 @@
+import BookingManagement from "../components/BookingManagement";
 import RoomManagement from "./RoomManagement";
 import SlotsManagement from "./SlotsManagement";
 
@@ -6,6 +7,7 @@ const AdminDashboardMain = () => {
     <div>
       <RoomManagement />
       <SlotsManagement />
+      <BookingManagement />
     </div>
   );
 };
