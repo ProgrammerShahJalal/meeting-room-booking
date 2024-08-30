@@ -16,6 +16,7 @@ import BookingPage from "./pages/BookingPage";
 import MyBookingPage from "./pages/MyBookingPage";
 import AdminRoute from "./components/AdminRoute";
 import AdminDashboardMain from "./pages/AdminDashboardMain";
+import ScrollToTopButton from "./components/ScrollToTopButton";
 
 export default function App() {
   return (
@@ -67,6 +68,8 @@ export default function App() {
             <Route path="*" element={<NotFoundPage />} />
           </Routes>
         </main>
+        {/* Scroll to Top Button */}
+        <ScrollToTopButton />
         <Footer />
       </div>
     </Router>
