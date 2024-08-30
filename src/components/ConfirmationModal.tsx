@@ -1,4 +1,5 @@
 import React from "react";
+import { useNavigate } from "react-router-dom";
 
 interface ConfirmationModalProps {
   isOpen: boolean;
@@ -16,7 +17,14 @@ const ConfirmationModal: React.FC<ConfirmationModalProps> = ({
   onClose,
   bookingDetails,
 }) => {
-  if (!isOpen) return null;
+  const navigate = useNavigate();
+
+  if (!isOpen) return null; // Conditional return remains
+
+  const handleClose = () => {
+    onClose(); // Close the modal first
+    navigate("/my-bookings"); // Then navigate to /my-bookings
+  };
 
   return (
     <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
@@ -26,16 +34,16 @@ const ConfirmationModal: React.FC<ConfirmationModalProps> = ({
           <strong>Room:</strong> {bookingDetails.roomName}
         </p>
         <p>
-          <strong>Date:</strong> {bookingDetails.date}
+          <strong>Date:</strong> {new Date(bookingDetails.date).toDateString()}
         </p>
         <p>
           <strong>Time:</strong> {bookingDetails.time}
         </p>
         <p>
-          <strong>Cost:</strong> ${bookingDetails.cost}
+          <strong>Total Amount:</strong> ${bookingDetails.cost}
         </p>
         <button
-          onClick={onClose}
+          onClick={handleClose}
           className="mt-4 px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600"
         >
           Close

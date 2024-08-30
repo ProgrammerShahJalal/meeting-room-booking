@@ -1,51 +1,41 @@
-import React, { useEffect, useState } from "react";
-
-interface Booking {
-  user: {
-    _id: string;
-    name: string;
-    email: string;
-  };
-  slots: string[];
-  date: string;
-  room: string;
-  startTime: string;
-  endTime: string;
-  paymentMethod: string;
-  cost: number;
-  isConfirmed: string;
-}
+import React from "react";
+import { useGetUserBookingsQuery } from "../redux/api/bookingApi";
 
 const MyBookingPage: React.FC = () => {
-  const [bookings, setBookings] = useState<Booking[]>([]);
+  const { data, error, isLoading } = useGetUserBookingsQuery();
 
-  useEffect(() => {
-    const storedBookings = JSON.parse(localStorage.getItem("bookings") || "[]");
-    setBookings(storedBookings);
-  }, []);
+  if (isLoading) return <div>Loading...</div>;
+  if (error) return <div>Error loading bookings.</div>;
+
+  const bookings = data?.data || [];
 
   return (
     <div className="bg-purple-100 px-16 py-12">
       <h1 className="text-2xl font-bold mb-4">My Bookings</h1>
-      {bookings.length === 0 ? (
+      {bookings?.length === 0 ? (
         <p>No bookings found.</p>
       ) : (
         <ul className="grid grid-cols-1 md:grid-cols-3 justify-center items-center gap-4 md:gap-16">
           {bookings.map((booking, index) => (
             <li
               key={index}
-              className="mb-4 p-4 border rounded-xl shadow-sm bg-white "
+              className="mb-4 p-4 border rounded-xl shadow-sm bg-white"
             >
-              <h2 className="text-lg font-semibold">{booking.room}</h2>
+              <h2 className="text-lg font-semibold">{booking?.room?.name}</h2>
               <p>
-                Date: {new Date(booking.date).toDateString()}
+                Room No: {booking?.room?.roomNo} - Floor:{" "}
+                {booking?.room?.floorNo}
+              </p>
+              <p>
+                Date: {new Date(booking?.date).toDateString()}
                 <br />
-                Time: {booking.startTime} - {booking.endTime}
+                Time: {booking?.slots[0]?.startTime} -{" "}
+                {booking?.slots[0]?.endTime}
                 <br />
                 Status:{" "}
                 <span
                   className={
-                    booking.isConfirmed === "confirmed"
+                    booking?.isConfirmed === "confirmed"
                       ? "text-green-600"
                       : "text-red-600"
                   }

@@ -1,4 +1,7 @@
 import React from "react";
+import { useCreateBookingMutation } from "../redux/api/bookingApi";
+import { toast } from "sonner";
+import { IoCheckmarkDoneCircleOutline } from "react-icons/io5";
 
 interface SubmitBookingProps {
   user: {
@@ -6,13 +9,10 @@ interface SubmitBookingProps {
     name: string;
     email: string;
   };
-  roomName: string;
-  selectedSlotId: string[];
+  roomId: string;
+  selectedSlotIds: string[];
   selectedDate: Date;
-  startTime: string;
-  endTime: string;
-  paymentMethod: string;
-  cost: number;
+
   onBookingSuccess: (
     roomName: string,
     date: string,
@@ -22,52 +22,41 @@ interface SubmitBookingProps {
 }
 
 const SubmitBooking: React.FC<SubmitBookingProps> = ({
-  user,
-  roomName,
-  selectedSlotId,
   selectedDate,
-  startTime,
-  endTime,
-  paymentMethod,
-  cost,
+  selectedSlotIds,
+  roomId,
+  user,
   onBookingSuccess,
 }) => {
-  // const [bookRoom] = useBookRoomMutation(); // You may remove this if not needed
+  const [createBooking, { isLoading, error }] = useCreateBookingMutation();
 
   const handleBooking = async () => {
-    console.log("Confirm Booking button clicked");
-
     const bookingData = {
-      user,
-      slots: selectedSlotId,
       date: selectedDate.toISOString(),
-      room: roomName,
-      startTime,
-      endTime,
-      paymentMethod,
-      cost,
-      isConfirmed: "unconfirmed",
+      slots: selectedSlotIds,
+      room: roomId,
+      user: user._id,
     };
 
     try {
-      // Store booking data in local storage
-      const existingBookings = JSON.parse(
-        localStorage.getItem("bookings") || "[]"
-      );
-      localStorage.setItem(
-        "bookings",
-        JSON.stringify([...existingBookings, bookingData])
-      );
+      const response = await createBooking(bookingData).unwrap();
 
-      console.log("Booking stored in local storage");
+      toast("Success!", {
+        className: "border-green-500 text-base",
+        description: "Booking created successfully",
+        duration: 3000,
+        icon: <IoCheckmarkDoneCircleOutline />,
+      });
+
+      // Trigger the success callback with relevant details
       onBookingSuccess(
-        roomName,
-        selectedDate.toDateString(),
-        `${startTime} - ${endTime}`,
-        cost
+        response?.data?.room?.name,
+        response?.data?.date,
+        `${response?.data?.slots[0]?.startTime} - ${response?.data?.slots[0]?.endTime}`,
+        response?.data?.totalAmount
       );
     } catch (error) {
-      console.error("Error storing booking:", error);
+      console.error("Error creating booking:", error);
     }
   };
 
@@ -76,9 +65,15 @@ const SubmitBooking: React.FC<SubmitBookingProps> = ({
       <button
         onClick={handleBooking}
         className="bg-blue-500 text-white px-4 py-2 rounded-md"
+        disabled={isLoading}
       >
-        Confirm Booking
+        {isLoading ? "Processing..." : "Confirm Booking"}
       </button>
+      {error && (
+        <p className="text-red-500 mt-2">
+          There was an error creating the booking.
+        </p>
+      )}
     </div>
   );
 };

@@ -15,7 +15,7 @@ interface Booking {
 export const bookingApi = createApi({
   reducerPath: "bookingApi",
   baseQuery: fetchBaseQuery({
-    baseUrl: "/api",
+    baseUrl: "https://meeting-room-booking-gilt.vercel.app/api/",
     prepareHeaders: (headers, { getState }) => {
       const token = (getState() as RootState).auth.token;
       if (token) {
@@ -26,11 +26,6 @@ export const bookingApi = createApi({
   }),
   tagTypes: ["Booking"],
   endpoints: (builder) => ({
-    getAvailableSlots: builder.query({
-      query: ({ date, roomId }: { date: string; roomId: string }) =>
-        `slots/availability?date=${date}&roomId=${roomId}`,
-    }),
-
     createBooking: builder.mutation<{ data: Booking }, Partial<Booking>>({
       query: (booking) => ({
         url: "/bookings",
@@ -39,6 +34,12 @@ export const bookingApi = createApi({
       }),
       invalidatesTags: ["Booking"],
     }),
+
+    getAvailableSlots: builder.query({
+      query: ({ date, roomId }: { date: string; roomId: string }) =>
+        `slots/availability?date=${date}&roomId=${roomId}`,
+    }),
+
     getAllBookings: builder.query<{ data: Booking[] }, void>({
       query: () => ({
         url: "/bookings",

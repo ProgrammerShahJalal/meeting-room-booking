@@ -32,7 +32,7 @@ const BookingSummary: React.FC<BookingSummaryProps> = ({
         <strong>Time:</strong> {startTime} - {endTime}
       </p>
       <p>
-        <strong>Cost:</strong> ${cost}
+        <strong>Cost Per Slot:</strong> ${cost}
       </p>
       <h3 className="text-lg font-semibold mt-4">User Information</h3>
       <p>

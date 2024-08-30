@@ -79,14 +79,10 @@ const BookingPage: React.FC = () => {
               />
               <SubmitBooking
                 user={user}
-                selectedSlotId={selectedSlotId}
                 selectedDate={selectedDate}
+                selectedSlotIds={selectedSlotId}
+                roomId={room._id}
                 onBookingSuccess={handleBookingSuccess}
-                roomName={room?.name}
-                startTime={startTime}
-                endTime={endTime}
-                paymentMethod={""}
-                cost={room.pricePerSlot}
               />
             </>
           )}
