@@ -1,7 +1,6 @@
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { useGetRoomsQuery } from "../redux/api/roomApi";
-import { Room } from "./utils/interface";
 import Lottie from "lottie-react";
 
 // URL to fetch Lottie animation JSON data
@@ -10,6 +9,7 @@ const LOTTIE_URL =
 
 const FeaturedRooms = () => {
   const { data: rooms, isLoading, error } = useGetRoomsQuery(undefined);
+
   const [animationData, setAnimationData] = useState(null);
 
   useEffect(() => {
@@ -51,7 +51,7 @@ const FeaturedRooms = () => {
       <div className="container mx-auto text-center">
         <h2 className="text-3xl font-bold mb-8">Featured Rooms</h2>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {featuredRooms?.map((room: Room) => (
+          {featuredRooms?.map((room) => (
             <div
               key={room._id}
               className="bg-white p-6 rounded-xl shadow-md hover:shadow-lg transition-shadow duration-300"

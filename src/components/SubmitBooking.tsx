@@ -1,7 +1,16 @@
 import React from "react";
 import { useCreateBookingMutation } from "../redux/api/bookingApi";
+import { useGetRoomByIdQuery } from "../redux/api/roomApi";
 import { toast } from "sonner";
 import { IoCheckmarkDoneCircleOutline } from "react-icons/io5";
+import { useGetSlotByIdQuery } from "../redux/api/slotsApi";
+
+interface CreateBookingData {
+  date: string;
+  slots: string[]; // Array of slot IDs
+  room: string; // Room ID as a string
+  user: string; // User ID as a string
+}
 
 interface SubmitBookingProps {
   user: {
@@ -9,10 +18,9 @@ interface SubmitBookingProps {
     name: string;
     email: string;
   };
-  roomId: string;
+  roomId: string; // Room ID as a string
   selectedSlotIds: string[];
   selectedDate: Date;
-
   onBookingSuccess: (
     roomName: string,
     date: string,
@@ -30,8 +38,14 @@ const SubmitBooking: React.FC<SubmitBookingProps> = ({
 }) => {
   const [createBooking, { isLoading, error }] = useCreateBookingMutation();
 
+  // Fetch room details
+  const { data: roomData } = useGetRoomByIdQuery(roomId);
+
+  // Fetch the first slot details
+  const { data: slotData } = useGetSlotByIdQuery(selectedSlotIds[0]);
+
   const handleBooking = async () => {
-    const bookingData = {
+    const bookingData: CreateBookingData = {
       date: selectedDate.toISOString(),
       slots: selectedSlotIds,
       room: roomId,
@@ -50,9 +64,9 @@ const SubmitBooking: React.FC<SubmitBookingProps> = ({
 
       // Trigger the success callback with relevant details
       onBookingSuccess(
-        response?.data?.room?.name,
+        roomData?.data?.name,
         response?.data?.date,
-        `${response?.data?.slots[0]?.startTime} - ${response?.data?.slots[0]?.endTime}`,
+        `${slotData?.startTime} - ${slotData?.endTime}`,
         response?.data?.totalAmount
       );
     } catch (error) {

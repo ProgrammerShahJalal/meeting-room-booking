@@ -28,17 +28,16 @@ const ConfirmationModal: React.FC<ConfirmationModalProps> = ({
 
   return (
     <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
-      <div className="bg-white p-6 rounded-md shadow-lg">
+      <div className="bg-white p-6 rounded-xl shadow-lg">
         <h2 className="text-2xl font-bold mb-4">Booking Confirmed!</h2>
+        <h3 className="text-lg font-bold mb-4">Thank you for booking!</h3>
         <p>
           <strong>Room:</strong> {bookingDetails.roomName}
         </p>
         <p>
           <strong>Date:</strong> {new Date(bookingDetails.date).toDateString()}
         </p>
-        <p>
-          <strong>Time:</strong> {bookingDetails.time}
-        </p>
+
         <p>
           <strong>Total Amount:</strong> ${bookingDetails.cost}
         </p>

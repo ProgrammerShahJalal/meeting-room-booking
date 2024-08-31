@@ -46,8 +46,6 @@ const BookingForm: React.FC<BookingFormProps> = ({ onSlotSelect, roomId }) => {
     }
   };
 
-  console.log("available slots", availableSlots);
-
   const handleSlotClick = (slot: Slot) => {
     if (selectedDate) {
       onSlotSelect(slot._id, selectedDate, slot.startTime, slot.endTime);

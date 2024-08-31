@@ -1,6 +1,6 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import { RootState } from "../store";
-import { Slot } from "../../components/utils/types";
+import { Slot, SlotsResponse } from "../../components/utils/types";
 
 export const slotApi = createApi({
   reducerPath: "slotApi",
@@ -17,14 +17,14 @@ export const slotApi = createApi({
   tagTypes: ["Slot"],
   endpoints: (builder) => ({
     getSlotsByRoomAndDate: builder.query<
-      Slot[],
+      SlotsResponse,
       { date: string; roomId: string }
     >({
       query: ({ date, roomId }) =>
         `slots/availability?date=${date}&roomId=${roomId}`,
       providesTags: ["Slot"],
     }),
-    getAllSlots: builder.query<Slot[], void>({
+    getAllSlots: builder.query<SlotsResponse, void>({
       query: () => `slots/availability`,
       providesTags: ["Slot"],
     }),
@@ -45,10 +45,7 @@ export const slotApi = createApi({
         method: "PUT",
         body,
       }),
-      invalidatesTags: (result, error, { id }) => [
-        { type: "Slot", id },
-        "Slot",
-      ],
+      invalidatesTags: (_, __, { id }) => [{ type: "Slot", id }, "Slot"],
     }),
     deleteSlot: builder.mutation<void, string>({
       query: (id) => ({
@@ -56,6 +53,10 @@ export const slotApi = createApi({
         method: "DELETE",
       }),
       invalidatesTags: ["Slot"],
+    }),
+    getSlotById: builder.query<Slot, string>({
+      query: (id) => `slots/${id}`,
+      providesTags: (_, __, id) => [{ type: "Slot", id }],
     }),
   }),
 });
@@ -66,4 +67,5 @@ export const {
   useCreateSlotsMutation,
   useUpdateSlotMutation,
   useDeleteSlotMutation,
+  useGetSlotByIdQuery,
 } = slotApi;

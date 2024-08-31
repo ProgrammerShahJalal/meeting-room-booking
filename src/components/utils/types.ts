@@ -1,10 +1,17 @@
 export interface Slot {
   _id: string;
-  room: string;
+  room: Room;
   date: string;
   startTime: string;
   endTime: string;
   isBooked: boolean;
+}
+
+export interface SlotsResponse {
+  data: Slot[];
+  success: boolean;
+  statusCode: number;
+  message: string;
 }
 
 export interface Room {
@@ -20,7 +27,13 @@ export interface Room {
   createdAt?: string;
   updatedAt?: string;
   imageUrl: string;
-  data?: Room;
+}
+
+export interface RoomsResponse {
+  data: Room[];
+  success: boolean;
+  statusCode: number;
+  message: string;
 }
 
 export interface User {
@@ -32,4 +45,15 @@ export interface User {
   role?: string;
   createdAt?: string;
   updatedAt?: string;
+}
+
+export interface Booking {
+  _id: string;
+  date: string;
+  slots: Slot[];
+  room: Room;
+  user: string;
+  totalAmount: number;
+  isConfirmed: "confirmed" | "unconfirmed";
+  isDeleted: boolean;
 }

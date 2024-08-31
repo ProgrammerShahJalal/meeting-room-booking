@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { useState } from "react";
 import { Button, Table, Modal, notification } from "antd";
 import {
@@ -88,9 +89,9 @@ const BookingManagement: React.FC = () => {
       title: "Date & Time",
       dataIndex: "date",
       key: "date",
-      render: (text: string, record: any) =>
+      render: (date: string, record: any) =>
         formatDate(
-          text,
+          date,
           record.slots.map((slot: any) => slot._id.$oid)
         ),
     },
@@ -98,13 +99,13 @@ const BookingManagement: React.FC = () => {
       title: "Status",
       dataIndex: "isConfirmed",
       key: "status",
-      render: (text: string) =>
-        text === "confirmed" ? "Confirmed" : "Unconfirmed",
+      render: (status: string) =>
+        status === "confirmed" ? "Confirmed" : "Unconfirmed",
     },
     {
       title: "Actions",
       key: "actions",
-      render: (text: string, record: any) => (
+      render: (_text: string, record: any) => (
         <span>
           <Button
             type="primary"

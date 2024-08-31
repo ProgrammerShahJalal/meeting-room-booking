@@ -46,6 +46,7 @@ const RoomDetails = () => {
       </div>
     );
 
+  console.log("room", room);
   return (
     <section className="py-12 bg-gray-100">
       <div className="container mx-auto px-4">

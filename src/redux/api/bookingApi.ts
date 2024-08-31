@@ -47,7 +47,7 @@ export const bookingApi = createApi({
       }),
       providesTags: ["Booking"],
     }),
-    getUserBookings: builder.query<{ data: Booking[] }, void>({
+    getUserBookings: builder.query({
       query: () => ({
         url: "/my-bookings",
         method: "GET",

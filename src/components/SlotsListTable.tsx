@@ -9,12 +9,7 @@ import {
 } from "../redux/api/slotsApi";
 import UpdateSlotPopup from "./UpdateSlotPopup";
 
-interface SlotsListTableProps {
-  date: string;
-  roomId: string;
-}
-
-const SlotsListTable: React.FC<SlotsListTableProps> = () => {
+const SlotsListTable: React.FC = () => {
   const { data: slots, error } = useGetAllSlotsQuery();
   const [deleteSlot] = useDeleteSlotMutation();
   const [updateSlot] = useUpdateSlotMutation();
@@ -49,6 +44,9 @@ const SlotsListTable: React.FC<SlotsListTableProps> = () => {
   };
 
   if (error) return <div>Error loading slots.</div>;
+  if (slots?.data?.length === 0) return <h2>No slots available</h2>;
+
+  console.log("slots", slots);
 
   return (
     <div className="overflow-x-auto">

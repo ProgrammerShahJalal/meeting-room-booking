@@ -1,6 +1,6 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import { RootState } from "../store";
-import { Room } from "../../components/utils/types";
+import { Room, RoomsResponse } from "../../components/utils/types";
 
 export const roomApi = createApi({
   reducerPath: "roomApi",
@@ -16,29 +16,42 @@ export const roomApi = createApi({
   }),
   tagTypes: ["Room"],
   endpoints: (builder) => ({
-    getRooms: builder.query<Room[], void>({
+    getRooms: builder.query<RoomsResponse, void>({
       query: () => "rooms",
       providesTags: ["Room"],
     }),
-    getRoomById: builder.query<Room, string>({
+    getRoomById: builder.query({
       query: (id) => `rooms/${id}`,
-      providesTags: (result, error, id) => [{ type: "Room", id }],
+      providesTags: (_, __, id) => [{ type: "Room", id }],
     }),
-    createRoomWithImage: builder.mutation<Room, FormData>({
-      query: (formData) => ({
+
+    createRoomWithImage: builder.mutation<
+      Room,
+      {
+        name: string;
+        roomNo: number;
+        floorNo: number;
+        capacity: number;
+        pricePerSlot: number;
+        amenities: string[];
+        imageUrl: string;
+      }
+    >({
+      query: (roomData) => ({
         url: "rooms",
         method: "POST",
-        body: formData,
+        body: roomData,
       }),
       invalidatesTags: ["Room"],
     }),
+
     updateRoom: builder.mutation<Room, { id: string; body: Partial<Room> }>({
       query: ({ id, body }) => ({
         url: `rooms/${id}`,
         method: "PUT",
         body,
       }),
-      invalidatesTags: (result, error, { id }) => [
+      invalidatesTags: (_, __, { id }) => [
         { type: "Room", id }, // Invalidate the specific room tag
         "Room", // Invalidate the room list tag to trigger a re-fetch
       ],

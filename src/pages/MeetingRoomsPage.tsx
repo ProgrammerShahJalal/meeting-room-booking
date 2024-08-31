@@ -72,7 +72,7 @@ const MeetingRoomsPage = () => {
     );
 
   if (error) return <p>Something went wrong!</p>;
-  if (rooms?.length === 0) return <p>No Rooms available right now!</p>;
+  if (rooms?.data?.length === 0) return <p>No Rooms available right now!</p>;
 
   return (
     <section className="py-12 bg-pink-100">

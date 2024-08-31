@@ -1,5 +1,3 @@
-import React from "react";
-
 const TermsOfService = () => {
   return (
     <section className="py-12 px-4 bg-white">

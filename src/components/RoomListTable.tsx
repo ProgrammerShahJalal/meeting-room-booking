@@ -3,13 +3,13 @@ import {
   useDeleteRoomMutation,
   useUpdateRoomMutation,
 } from "../redux/api/roomApi";
-import { Room } from "./utils/types";
+import { Room, RoomsResponse } from "./utils/types";
 import { IoCheckmarkDoneCircleOutline } from "react-icons/io5";
 import { toast } from "sonner";
 import UpdateRoomPopup from "./UpdateRoomPopup";
 
 interface RoomListTableProps {
-  rooms: Room[];
+  rooms: RoomsResponse;
 }
 
 const RoomListTable: React.FC<RoomListTableProps> = ({ rooms }) => {

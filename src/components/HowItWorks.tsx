@@ -1,4 +1,3 @@
-import React from "react";
 import { FaDoorOpen, FaCalendarAlt, FaCheckCircle } from "react-icons/fa";
 
 const HowItWorks = () => {
