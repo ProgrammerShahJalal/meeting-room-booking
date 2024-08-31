@@ -13,29 +13,33 @@ const BookingPage: React.FC = () => {
   const location = useLocation();
   const room = location.state?.room;
 
-  const [selectedSlotId, setSelectedSlotId] = useState<string>("");
+  const [selectedSlotIds, setSelectedSlotIds] = useState<string[]>([]);
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
-  const [startTime, setStartTime] = useState<string | null>(null);
-  const [endTime, setEndTime] = useState<string | null>(null);
+  const [timeSlots, setTimeSlots] = useState<
+    { startTime: string; endTime: string }[]
+  >([]);
   const [, setPaymentMethod] = useState<string>("");
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [bookingDetails, setBookingDetails] = useState<{
     roomName: string;
     date: string;
-    time: string;
+    timeSlots: { startTime: string; endTime: string }[];
     cost: number;
   } | null>(null);
 
   const handleSlotSelect = (
-    slotId: string,
-    date: Date,
-    startTime: string,
-    endTime: string
+    slots: { slotId: string; startTime: string; endTime: string }[],
+    date: Date
   ) => {
-    setSelectedSlotId(slotId);
+    const slotIds = slots.map((slot) => slot.slotId);
+    setSelectedSlotIds(slotIds);
     setSelectedDate(date);
-    setStartTime(startTime);
-    setEndTime(endTime);
+    setTimeSlots(
+      slots.map((slot) => ({
+        startTime: slot.startTime,
+        endTime: slot.endTime,
+      }))
+    );
   };
 
   const handlePaymentMethodSelect = (method: string) => {
@@ -45,14 +49,15 @@ const BookingPage: React.FC = () => {
   const handleBookingSuccess = (
     roomName: string,
     date: string,
-    time: string,
     cost: number
   ) => {
-    setBookingDetails({ roomName, date, time, cost });
+    console.log(
+      "Selected Time Slots before setting booking details:",
+      timeSlots
+    );
+    setBookingDetails({ roomName, date, timeSlots, cost });
     setIsModalOpen(true);
   };
-
-  console.log("booking details", bookingDetails);
 
   const closeModal = () => {
     setIsModalOpen(false);
@@ -67,13 +72,12 @@ const BookingPage: React.FC = () => {
         <>
           <BookingForm onSlotSelect={handleSlotSelect} roomId={room?._id} />
           <UserInformationForm />
-          {selectedSlotId && selectedDate && startTime && endTime && (
+          {selectedSlotIds.length > 0 && selectedDate && (
             <>
               <BookingSummary
                 roomName={room.name}
                 selectedDate={selectedDate}
-                startTime={startTime}
-                endTime={endTime}
+                timeSlots={timeSlots}
                 cost={room.pricePerSlot}
               />
               <PaymentOptions
@@ -83,9 +87,15 @@ const BookingPage: React.FC = () => {
                 <SubmitBooking
                   user={user}
                   selectedDate={selectedDate}
-                  selectedSlotIds={[selectedSlotId]}
+                  selectedSlotIds={selectedSlotIds}
                   roomId={room._id}
-                  onBookingSuccess={handleBookingSuccess}
+                  onBookingSuccess={() =>
+                    handleBookingSuccess(
+                      room.name,
+                      selectedDate.toISOString(),
+                      room.pricePerSlot * selectedSlotIds.length
+                    )
+                  }
                 />
               )}
             </>
@@ -97,7 +107,7 @@ const BookingPage: React.FC = () => {
           />
         </>
       ) : (
-        <div className="text-center text-red-500">
+        <div className="text-center font-semibold text-red-500">
           Room information not available.
         </div>
       )}

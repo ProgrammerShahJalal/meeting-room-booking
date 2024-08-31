@@ -46,8 +46,6 @@ const SlotsListTable: React.FC = () => {
   if (error) return <div>Error loading slots.</div>;
   if (slots?.data?.length === 0) return <h2>No slots available</h2>;
 
-  console.log("slots", slots);
-
   return (
     <div className="overflow-x-auto">
       <table className="min-w-full bg-white rounded-xl">

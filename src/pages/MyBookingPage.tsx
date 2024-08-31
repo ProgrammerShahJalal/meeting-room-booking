@@ -16,6 +16,8 @@ const MyBookingPage: React.FC = () => {
 
   const bookings = data?.data || [];
 
+  console.log("bookings", bookings);
+
   useEffect(() => {
     const fetchAnimationData = async () => {
       try {
@@ -65,12 +67,18 @@ const MyBookingPage: React.FC = () => {
                   Room No: {booking?.room?.roomNo} - Floor:{" "}
                   {booking?.room?.floorNo}
                 </p>
+                <p>Date: {new Date(booking?.date).toDateString()}</p>
+                <div>
+                  <p>Time Slots:</p>
+                  <ul>
+                    {booking?.slots?.map((slot, slotIndex) => (
+                      <li key={slotIndex}>
+                        {slot.startTime} - {slot.endTime}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
                 <p>
-                  Date: {new Date(booking?.date).toDateString()}
-                  <br />
-                  Time: {booking?.slots[0]?.startTime} -{" "}
-                  {booking?.slots[0]?.endTime}
-                  <br />
                   Status:{" "}
                   <span
                     className={

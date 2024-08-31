@@ -7,8 +7,8 @@ interface ConfirmationModalProps {
   bookingDetails: {
     roomName: string;
     date: string;
-    time: string;
     cost: number;
+    timeSlots: { startTime: string; endTime: string }[];
   };
 }
 
@@ -26,6 +26,7 @@ const ConfirmationModal: React.FC<ConfirmationModalProps> = ({
     navigate("/my-bookings"); // Then navigate to /my-bookings
   };
 
+  console.log("bookingDetails", bookingDetails);
   return (
     <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
       <div className="bg-white p-6 rounded-xl shadow-lg">
@@ -37,7 +38,15 @@ const ConfirmationModal: React.FC<ConfirmationModalProps> = ({
         <p>
           <strong>Date:</strong> {new Date(bookingDetails.date).toDateString()}
         </p>
-
+        <p>
+          <strong>Time Slots:</strong>{" "}
+          {bookingDetails?.timeSlots?.map((slot, index) => (
+            <span key={index}>
+              {slot?.startTime} - {slot?.endTime}
+              {index < bookingDetails.timeSlots.length - 1 && ", "}
+            </span>
+          ))}
+        </p>
         <p>
           <strong>Total Amount:</strong> ${bookingDetails.cost}
         </p>

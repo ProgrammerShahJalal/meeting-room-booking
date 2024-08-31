@@ -6,11 +6,9 @@ import {
   useGetAllBookingsQuery,
   useUpdateBookingMutation,
 } from "../redux/api/bookingApi";
-import { useGetAllSlotsQuery } from "../redux/api/slotsApi";
 
 const BookingManagement: React.FC = () => {
   const { data: bookingsData, isLoading } = useGetAllBookingsQuery();
-  const { data: slotsData } = useGetAllSlotsQuery();
   const [updateBooking] = useUpdateBookingMutation();
   const [deleteBooking] = useDeleteBookingMutation();
   const [confirmModalVisible, setConfirmModalVisible] = useState(false);
@@ -56,22 +54,13 @@ const BookingManagement: React.FC = () => {
     }
   };
 
-  const formatDate = (dateString: string, slotIds: string[]) => {
-    const date = new Date(dateString);
-    const formattedDate = date.toDateString(); // Format like "Thu Oct 14 2024"
-
-    // Filter slots by IDs and create a time range string
-    const timeRange = slotIds
-      .map((slotId) => {
-        const slot = slotsData?.data.find(
-          (slot: any) => slot._id.$oid === slotId
-        );
-        return slot ? `${slot.startTime} - ${slot.endTime}` : null;
-      })
-      .filter(Boolean)
+  const formatDateAndTime = (dateString: string, slots: any[]) => {
+    const date = new Date(dateString).toDateString();
+    const timeSlots = slots
+      .map((slot: any) => `${slot.startTime} - ${slot.endTime}`)
       .join(", ");
 
-    return `${formattedDate}, ${timeRange}`;
+    return `${date}, ${timeSlots}`;
   };
 
   const columns = [
@@ -90,10 +79,7 @@ const BookingManagement: React.FC = () => {
       dataIndex: "date",
       key: "date",
       render: (date: string, record: any) =>
-        formatDate(
-          date,
-          record.slots.map((slot: any) => slot._id.$oid)
-        ),
+        formatDateAndTime(date, record.slots || []),
     },
     {
       title: "Status",
@@ -123,7 +109,7 @@ const BookingManagement: React.FC = () => {
             Reject
           </Button>
           <button
-            className="px-4 py-1 rounded-xl bg-red-500"
+            className="px-4 py-1 rounded-xl bg-red-500 text-white"
             onClick={() => handleDelete(record._id)}
           >
             Delete

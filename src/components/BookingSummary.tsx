@@ -5,16 +5,14 @@ import { RootState } from "../redux/store";
 interface BookingSummaryProps {
   roomName: string;
   selectedDate: Date;
-  startTime: string;
-  endTime: string;
+  timeSlots: { startTime: string; endTime: string }[];
   cost: number;
 }
 
 const BookingSummary: React.FC<BookingSummaryProps> = ({
   roomName,
   selectedDate,
-  startTime,
-  endTime,
+  timeSlots,
   cost,
 }) => {
   const user = useSelector((state: RootState) => state.auth.user);
@@ -29,10 +27,20 @@ const BookingSummary: React.FC<BookingSummaryProps> = ({
         <strong>Date:</strong> {selectedDate.toDateString()}
       </p>
       <p>
-        <strong>Time:</strong> {startTime} - {endTime}
+        <strong>Time Slots:</strong>
       </p>
+      <ul className="list-disc pl-6">
+        {timeSlots.map((slot, index) => (
+          <li key={index}>
+            {slot.startTime} - {slot.endTime}
+          </li>
+        ))}
+      </ul>
       <p>
         <strong>Cost Per Slot:</strong> ${cost}
+      </p>
+      <p>
+        <strong>Total Cost:</strong> ${cost * timeSlots.length}
       </p>
       <h3 className="text-lg font-semibold mt-4">User Information</h3>
       <p>

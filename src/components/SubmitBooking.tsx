@@ -3,7 +3,7 @@ import { useCreateBookingMutation } from "../redux/api/bookingApi";
 import { useGetRoomByIdQuery } from "../redux/api/roomApi";
 import { toast } from "sonner";
 import { IoCheckmarkDoneCircleOutline } from "react-icons/io5";
-import { useGetSlotByIdQuery } from "../redux/api/slotsApi";
+import { useGetSlotsByIds } from "../hooks/useGetSlotsByIds"; // Import your custom hook
 
 interface CreateBookingData {
   date: string;
@@ -24,7 +24,7 @@ interface SubmitBookingProps {
   onBookingSuccess: (
     roomName: string,
     date: string,
-    time: string,
+    timeSlots: { startTime: string; endTime: string }[],
     cost: number
   ) => void;
 }
@@ -41,8 +41,8 @@ const SubmitBooking: React.FC<SubmitBookingProps> = ({
   // Fetch room details
   const { data: roomData } = useGetRoomByIdQuery(roomId);
 
-  // Fetch the first slot details
-  const { data: slotData } = useGetSlotByIdQuery(selectedSlotIds[0]);
+  // Fetch all slots data using custom hook
+  const slotTimes = useGetSlotsByIds(selectedSlotIds);
 
   const handleBooking = async () => {
     const bookingData: CreateBookingData = {
@@ -64,9 +64,9 @@ const SubmitBooking: React.FC<SubmitBookingProps> = ({
 
       // Trigger the success callback with relevant details
       onBookingSuccess(
-        roomData?.data?.name,
+        roomData?.data?.name || "Room",
         response?.data?.date,
-        `${slotData?.startTime} - ${slotData?.endTime}`,
+        slotTimes,
         response?.data?.totalAmount
       );
     } catch (error) {
