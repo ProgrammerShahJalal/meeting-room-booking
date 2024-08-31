@@ -40,7 +40,6 @@ const FeaturedRooms = () => {
       </div>
     );
 
-  if (error) return <p>Something went wrong!</p>;
   if (rooms?.data?.length === 0) return <p>No Rooms available right now!</p>;
 
   // Limit to 3 rooms
@@ -84,6 +83,9 @@ const FeaturedRooms = () => {
           See More
         </Link>
       </div>
+      {error && (
+        <p className="font-bold text-center my-5">Something went wrong!</p>
+      )}
     </section>
   );
 };

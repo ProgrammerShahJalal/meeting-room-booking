@@ -1,16 +1,48 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useGetUserBookingsQuery } from "../redux/api/bookingApi";
 import { Booking } from "../components/utils/types";
 import { useSelector } from "react-redux";
 import { RootState } from "../redux/store";
+import Lottie from "lottie-react";
+
+// URL to fetch Lottie animation JSON data
+const LOTTIE_URL =
+  "https://lottie.host/0fea4ce6-8b86-47f0-89dd-fabfdeda9fbc/P8PHWLK1QD.json";
 
 const MyBookingPage: React.FC = () => {
+  const [animationData, setAnimationData] = useState(null);
   const user = useSelector((state: RootState) => state.auth.user);
   const { data, error, isLoading } = useGetUserBookingsQuery(undefined);
 
-  if (isLoading) return <div>Loading...</div>;
-
   const bookings = data?.data || [];
+
+  useEffect(() => {
+    const fetchAnimationData = async () => {
+      try {
+        const response = await fetch(LOTTIE_URL);
+        const data = await response.json();
+        setAnimationData(data);
+      } catch (err) {
+        console.error("Failed to load Lottie animation data:", err);
+      }
+    };
+
+    fetchAnimationData();
+  }, []);
+
+  if (isLoading)
+    return (
+      <div className="flex justify-center items-center">
+        {animationData && (
+          <Lottie
+            animationData={animationData}
+            loop
+            autoplay
+            style={{ width: 200, height: 200 }}
+          />
+        )}
+      </div>
+    );
 
   return (
     <div className="bg-purple-100 px-16 py-12">
@@ -55,7 +87,9 @@ const MyBookingPage: React.FC = () => {
           )}
         </ul>
       )}
-      {error && bookings?.length !== 0 && <h3>Something went wrong.</h3>}
+      {error && bookings?.length !== 0 && (
+        <h3 className="font-bold text-center my-5">Something went wrong.</h3>
+      )}
     </div>
   );
 };

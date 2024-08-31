@@ -61,7 +61,7 @@ const BookingPage: React.FC = () => {
   const user = useSelector((state: RootState) => state.auth.user);
 
   return (
-    <div className="container mx-auto p-4">
+    <div className="container mx-auto p-4 bg-purple-100">
       <h1 className="text-4xl font-bold text-center mb-8">Book a Room</h1>
       {room ? (
         <>

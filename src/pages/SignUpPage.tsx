@@ -1,11 +1,17 @@
 import { useState } from "react";
-import { useSignupUserMutation } from "../redux/api/authApi";
+import {
+  useSignupUserMutation,
+  useLoginUserMutation,
+} from "../redux/api/authApi";
 import { toast } from "sonner";
 import { IoCheckmarkDoneCircleOutline } from "react-icons/io5";
 import { IoAlertCircleOutline } from "react-icons/io5";
 import { Link, useLocation, useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { loginSuccess } from "../redux/features/authSlice";
 
 const SignUpPage = () => {
+  const dispatch = useDispatch();
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -16,7 +22,10 @@ const SignUpPage = () => {
     phone: "",
     address: "",
   });
-  const [signupUser, { isLoading, error }] = useSignupUserMutation();
+  const [signupUser, { isLoading: isSignupLoading, error: signupError }] =
+    useSignupUserMutation();
+  const [loginUser, { isLoading: isLoginLoading, error: loginError }] =
+    useLoginUserMutation();
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({
@@ -28,35 +37,62 @@ const SignUpPage = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      const result = await signupUser(formData).unwrap();
-      console.log("Signup successful:", result?.message);
-      toast("Success!", {
+      // Perform signup
+      const signupResult = await signupUser(formData).unwrap();
+      console.log("Signup successful:", signupResult?.message);
+      toast("Signup Successful!", {
         className: "border-green-500 text-base",
-        description: result?.message,
+        description: signupResult?.message,
         duration: 3000,
         icon: <IoCheckmarkDoneCircleOutline />,
       });
 
-      const from =
-        (location.state as { from?: Location })?.from?.pathname || "/";
-      navigate(from); // Redirect to the requested page or home page
+      // Perform login
+      const loginResult = await loginUser({
+        email: formData.email,
+        password: formData.password,
+      }).unwrap();
+
+      const { data: user, token } = loginResult;
+
+      if (user && token) {
+        dispatch(loginSuccess({ user, token })); // Passing both user and token to loginSuccess
+
+        const from =
+          (location.state as { from?: Location })?.from?.pathname || "/";
+        navigate(from); // Redirect to the requested page or home page
+      } else {
+        throw new Error("Login failed: No user or token returned");
+      }
     } catch (err) {
-      console.log(err);
-      // Extract error message
+      console.error("Error:", err);
       const errorMessage =
-        error && "status" in error
-          ? (error.data as { message?: string })?.message || "An error occurred"
-          : error?.message || "An unknown error occurred";
+        signupError && "status" in signupError
+          ? (signupError.data as { message?: string })?.message ||
+            "Signup error occurred"
+          : signupError?.message || "An unknown error occurred during signup";
 
-      console.error("Signup failed:", errorMessage);
-
-      // Show error message in toast
       toast("Signup Failed", {
         className: "border-red-500 text-base",
         description: errorMessage,
         duration: 3000,
         icon: <IoAlertCircleOutline />,
       });
+
+      if (loginError) {
+        const loginErrorMessage =
+          loginError && "status" in loginError
+            ? (loginError.data as { message?: string })?.message ||
+              "Login error occurred"
+            : loginError?.message || "An unknown error occurred during login";
+
+        toast("Login Failed", {
+          className: "border-red-500 text-base",
+          description: loginErrorMessage,
+          duration: 3000,
+          icon: <IoAlertCircleOutline />,
+        });
+      }
     }
   };
 
@@ -115,10 +151,10 @@ const SignUpPage = () => {
           />
           <button
             type="submit"
-            disabled={isLoading}
+            disabled={isSignupLoading || isLoginLoading}
             className="w-full bg-blue-500 text-white py-2 rounded-xl hover:bg-blue-600 transition duration-300"
           >
-            {isLoading ? "Signing Up..." : "Sign Up"}
+            {isSignupLoading || isLoginLoading ? "Signing Up..." : "Sign Up"}
           </button>
         </div>
         <h5 className="text-center mt-5">
