@@ -6,7 +6,7 @@ const UserInformationForm: React.FC = () => {
   const user = useSelector((state: RootState) => state.auth.user);
 
   return (
-    <div className="flex flex-col items-center mt-4">
+    <div className="flex flex-col items-center my-4">
       <h2 className="text-2xl font-bold mb-4">User Information</h2>
       <div className="w-full max-w-md p-4 border border-gray-300 rounded-lg">
         <p className="mb-2">

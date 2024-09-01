@@ -1,8 +1,9 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Calendar, { CalendarProps } from "react-calendar";
 import "react-calendar/dist/Calendar.css";
 import { Slot } from "../components/utils/types";
 import { useGetSlotsByRoomAndDateQuery } from "../redux/api/slotsApi";
+import { useDebounce } from "../hooks/useDebounce";
 
 interface BookingFormProps {
   onSlotSelect: (
@@ -18,44 +19,67 @@ const BookingForm: React.FC<BookingFormProps> = ({ onSlotSelect, roomId }) => {
   const [selectedSlots, setSelectedSlots] = useState<
     { slotId: string; startTime: string; endTime: string }[]
   >([]);
+  const [isFetchingNewData, setIsFetchingNewData] = useState(false);
+
+  const formattedDate = selectedDate
+    ? selectedDate.toISOString().split("T")[0]
+    : "";
+
+  const debouncedDate = useDebounce(formattedDate, 300);
 
   const {
     data: availableSlots,
     error,
     isLoading,
   } = useGetSlotsByRoomAndDateQuery(
-    { date: "", roomId }, // Fetch all slots for the room
-    { skip: !roomId }
+    { date: debouncedDate, roomId }, // Use the debounced date
+    { skip: !roomId || !debouncedDate }
   );
 
-  // Update highlightedDates whenever availableSlots changes
-  React.useEffect(() => {
+  useEffect(() => {
+    if (isLoading) {
+      setIsFetchingNewData(true);
+    }
     if (availableSlots?.data) {
+      setIsFetchingNewData(false);
       const datesWithSlots = availableSlots.data.map(
         (slot: Slot) => new Date(slot.date)
       );
       setHighlightedDates(datesWithSlots);
     }
-  }, [availableSlots]);
+  }, [isLoading, availableSlots]);
 
-  const slotsLength = availableSlots?.data?.length || 0;
-
+  // Handle date change and debounce the fetch
   const handleDateChange: CalendarProps["onChange"] = (value) => {
+    setSelectedSlots([]); // Clear selected slots when the date changes
+    setIsFetchingNewData(true); // Set flag to true to show loading state
+
     if (value instanceof Date) {
-      setSelectedDate(value);
-      setSelectedSlots([]); // Clear selected slots when the date changes
-    } else if (Array.isArray(value)) {
-      setSelectedDate(value[0]);
-      setSelectedSlots([]); // Clear selected slots when the date changes
+      const utcDate = new Date(
+        Date.UTC(value.getFullYear(), value.getMonth(), value.getDate())
+      );
+      setSelectedDate(utcDate);
+    } else if (
+      Array.isArray(value) &&
+      value[0] !== null &&
+      value[0] !== undefined
+    ) {
+      const utcDate = new Date(
+        Date.UTC(
+          value[0].getFullYear(),
+          value[0].getMonth(),
+          value[0].getDate()
+        )
+      );
+      setSelectedDate(utcDate);
     } else {
       setSelectedDate(null);
-      setSelectedSlots([]); // Clear selected slots when the date changes
     }
   };
 
-  const handleSlotClick = (slot: Slot) => {
-    console.log("slot in handle slot click", slot);
+  const slotsLength = availableSlots?.data?.length || 0;
 
+  const handleSlotClick = (slot: Slot) => {
     const updatedSlots = [
       ...selectedSlots,
       {
@@ -66,7 +90,6 @@ const BookingForm: React.FC<BookingFormProps> = ({ onSlotSelect, roomId }) => {
     ];
 
     setSelectedSlots(updatedSlots);
-
     onSlotSelect(updatedSlots, selectedDate as Date);
   };
 
@@ -90,10 +113,10 @@ const BookingForm: React.FC<BookingFormProps> = ({ onSlotSelect, roomId }) => {
         className="mb-4"
         tileClassName={tileClassName}
       />
-      {isLoading ? (
+      {(isFetchingNewData || isLoading) && !error ? (
         <div>Loading...</div>
       ) : error ? (
-        <div>Error loading slots.</div>
+        <div>No available slots for this date.</div>
       ) : (
         <>
           {selectedDate && slotsLength > 0 ? (
