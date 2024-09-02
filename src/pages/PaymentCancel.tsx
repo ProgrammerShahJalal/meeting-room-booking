@@ -6,7 +6,7 @@ const PaymentCancel: React.FC = () => {
   const navigate = useNavigate();
 
   const handleRetryPayment = () => {
-    navigate("/checkout"); // Redirect to the checkout page or payment options
+    navigate("/meeting-rooms");
   };
 
   return (
@@ -20,7 +20,7 @@ const PaymentCancel: React.FC = () => {
         onClick={handleRetryPayment}
         className="bg-red-500 text-white px-6 py-2 rounded-lg shadow-md hover:bg-red-600"
       >
-        Retry Payment
+        Go to Meeting Rooms
       </button>
     </div>
   );

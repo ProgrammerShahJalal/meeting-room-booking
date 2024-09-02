@@ -63,7 +63,7 @@ function App() {
             }
           />
           <Route
-            path="/booking/:id"
+            path="/book-room/:id"
             element={
               <PrivateRoute>
                 <BookingPage />
@@ -71,7 +71,7 @@ function App() {
             }
           />
           <Route
-            path="/payment-success"
+            path="/success/"
             element={
               <PrivateRoute>
                 <PaymentSuccess />
@@ -79,7 +79,7 @@ function App() {
             }
           />
           <Route
-            path="/payment-cancel"
+            path="/cancel"
             element={
               <PrivateRoute>
                 <PaymentCancel />
