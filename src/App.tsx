@@ -17,6 +17,8 @@ import AdminRoute from "./components/AdminRoute";
 import AdminDashboardMain from "./pages/AdminDashboardMain";
 import ScrollToTopButton from "./components/ScrollToTopButton";
 import BookingPage from "./pages/BookingPage";
+import PaymentSuccess from "./pages/PaymentSuccess";
+import PaymentCancel from "./pages/PaymentCancel";
 
 export default function App() {
   return (
@@ -58,6 +60,22 @@ export default function App() {
               element={
                 <PrivateRoute>
                   <MyBookingPage />
+                </PrivateRoute>
+              }
+            />
+            <Route
+              path="/success/"
+              element={
+                <PrivateRoute>
+                  <PaymentSuccess />
+                </PrivateRoute>
+              }
+            />
+            <Route
+              path="/cancel"
+              element={
+                <PrivateRoute>
+                  <PaymentCancel />
                 </PrivateRoute>
               }
             />

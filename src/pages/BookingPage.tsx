@@ -1,3 +1,4 @@
+// BookingPage.tsx
 import React, { useState } from "react";
 import { useLocation } from "react-router-dom";
 import UserInformationForm from "../components/UserInformationForm";
@@ -18,7 +19,7 @@ const BookingPage: React.FC = () => {
   const [timeSlots, setTimeSlots] = useState<
     { startTime: string; endTime: string }[]
   >([]);
-  const [, setPaymentMethod] = useState<string>("");
+  const [paymentMethod, setPaymentMethod] = useState<string>("");
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [bookingDetails, setBookingDetails] = useState<{
     roomName: string;
@@ -49,6 +50,7 @@ const BookingPage: React.FC = () => {
   const handleBookingSuccess = (
     roomName: string,
     date: string,
+    timeSlots: { startTime: string; endTime: string }[],
     cost: number
   ) => {
     setBookingDetails({ roomName, date, timeSlots, cost });
@@ -63,7 +65,7 @@ const BookingPage: React.FC = () => {
 
   return (
     <div className="container mx-auto p-4 py-10 bg-pink-100">
-      <h1 className="text-4xl font-bold text-center mb-8">Book a Room</h1>
+      <h1 className="text-4xl font-bold text-center mb-8">Book The Room</h1>
       {room ? (
         <>
           <BookingForm onSlotSelect={handleSlotSelect} roomId={room?._id} />
@@ -85,11 +87,13 @@ const BookingPage: React.FC = () => {
                   selectedDate={selectedDate}
                   selectedSlotIds={selectedSlotIds}
                   roomId={room._id}
+                  paymentOption={paymentMethod} // Pass the payment method here
                   onBookingSuccess={() =>
                     handleBookingSuccess(
                       room.name,
                       selectedDate.toISOString(),
-                      room.pricePerSlot * selectedSlotIds.length
+                      timeSlots,
+                      room?.pricePerSlot * selectedSlotIds?.length
                     )
                   }
                 />
