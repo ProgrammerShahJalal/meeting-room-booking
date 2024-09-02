@@ -4,7 +4,9 @@ import {
   HomeOutlined,
   ScheduleOutlined,
   BookOutlined,
+  DashboardOutlined,
 } from "@ant-design/icons";
+
 import { Link, Outlet } from "react-router-dom";
 
 const { Header, Content, Sider } = Layout;
@@ -26,13 +28,16 @@ const AdminDashboardMain: React.FC = () => {
           </Link>
         </div>
         <Menu theme="dark" mode="inline" defaultSelectedKeys={["1"]}>
-          <Menu.Item key="1" icon={<HomeOutlined />}>
+          <Menu.Item key="1" icon={<DashboardOutlined />}>
+            <Link to="/admin">Overview</Link>
+          </Menu.Item>
+          <Menu.Item key="2" icon={<HomeOutlined />}>
             <Link to="/admin/room-management">Room Management</Link>
           </Menu.Item>
-          <Menu.Item key="2" icon={<ScheduleOutlined />}>
+          <Menu.Item key="3" icon={<ScheduleOutlined />}>
             <Link to="/admin/slot-management">Slot Management</Link>
           </Menu.Item>
-          <Menu.Item key="3" icon={<BookOutlined />}>
+          <Menu.Item key="4" icon={<BookOutlined />}>
             <Link to="/admin/booking-management">Booking Management</Link>
           </Menu.Item>
         </Menu>

@@ -1,18 +1,17 @@
 import React, { useState } from "react";
 import {
   useDeleteRoomMutation,
+  useGetRoomsQuery,
   useUpdateRoomMutation,
 } from "../redux/api/roomApi";
-import { Room, RoomsResponse } from "./utils/types";
+import { Room } from "./utils/types";
 import { IoCheckmarkDoneCircleOutline } from "react-icons/io5";
 import { toast } from "sonner";
+import { Button, Table, Popconfirm } from "antd";
 import UpdateRoomPopup from "./UpdateRoomPopup";
 
-interface RoomListTableProps {
-  rooms: RoomsResponse;
-}
-
-const RoomListTable: React.FC<RoomListTableProps> = ({ rooms }) => {
+const RoomListTable: React.FC = () => {
+  const { data: rooms, isLoading } = useGetRoomsQuery();
   const [deleteRoom] = useDeleteRoomMutation();
   const [updateRoom] = useUpdateRoomMutation();
   const [selectedRoom, setSelectedRoom] = useState<Room | null>(null);
@@ -45,46 +44,70 @@ const RoomListTable: React.FC<RoomListTableProps> = ({ rooms }) => {
     }
   };
 
+  const columns = [
+    {
+      title: "Room Name",
+      dataIndex: "name",
+      key: "name",
+    },
+    {
+      title: "Room No.",
+      dataIndex: "roomNo",
+      key: "roomNo",
+    },
+    {
+      title: "Floor No.",
+      dataIndex: "floorNo",
+      key: "floorNo",
+    },
+    {
+      title: "Capacity",
+      dataIndex: "capacity",
+      key: "capacity",
+    },
+    {
+      title: "Price Per Slot",
+      dataIndex: "pricePerSlot",
+      key: "pricePerSlot",
+    },
+    {
+      title: "Actions",
+      key: "actions",
+      render: (_text: string, record: Room) => (
+        <span>
+          <Button
+            type="primary"
+            onClick={() => setSelectedRoom(record)}
+            className="m-1"
+          >
+            Update
+          </Button>
+          <Popconfirm
+            title="Are you sure you want to delete this room?"
+            onConfirm={() => handleDelete(record._id)}
+            okText="Yes"
+            cancelText="No"
+          >
+            <button className="px-4 m-1 py-1 rounded-xl bg-red-500 text-white">
+              Delete
+            </button>
+          </Popconfirm>
+        </span>
+      ),
+    },
+  ];
+
   return (
     <div className="overflow-x-auto">
       <h2 className="text-2xl font-bold text-center my-6">Room List</h2>
-      <table className="min-w-full bg-white rounded-xl ">
-        <thead>
-          <tr>
-            <th className="py-2">Room Name</th>
-            <th className="py-2">Room No.</th>
-            <th className="py-2">Floor No.</th>
-            <th className="py-2">Capacity</th>
-            <th className="py-2">Price Per Slot</th>
-            <th className="py-2">Actions</th>
-          </tr>
-        </thead>
-        <tbody>
-          {rooms?.data?.map((room: Room) => (
-            <tr key={room._id}>
-              <td className="border px-4 py-2">{room.name}</td>
-              <td className="border px-4 py-2">{room.roomNo}</td>
-              <td className="border px-4 py-2">{room.floorNo}</td>
-              <td className="border px-4 py-2">{room.capacity}</td>
-              <td className="border px-4 py-2">{room.pricePerSlot}</td>
-              <td className="border px-4 py-2 flex justify-around gap-3">
-                <button
-                  onClick={() => setSelectedRoom(room)} // Set selected room
-                  className="bg-yellow-500 text-white px-2 py-1 rounded-md"
-                >
-                  Update
-                </button>
-                <button
-                  onClick={() => handleDelete(room._id)}
-                  className="bg-red-500 text-white px-2 py-1 rounded-md"
-                >
-                  Delete
-                </button>
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
+      <Table
+        columns={columns}
+        dataSource={rooms?.data || []}
+        rowKey={(record) => record._id}
+        pagination={{ pageSize: 10 }}
+        loading={isLoading}
+        className="mx-12"
+      />
 
       {/* Show the Update Popup if a room is selected */}
       {selectedRoom && (

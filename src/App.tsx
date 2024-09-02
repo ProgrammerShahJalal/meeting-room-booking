@@ -27,6 +27,7 @@ import PaymentCancel from "./pages/PaymentCancel";
 import RoomManagement from "./pages/RoomManagement";
 import SlotsManagement from "./pages/SlotsManagement";
 import BookingManagement from "./components/BookingManagement";
+import WelcomeDashboard from "./components/WelcomeDashboard";
 
 function App() {
   const location = useLocation();
@@ -93,6 +94,14 @@ function App() {
               element={
                 <AdminRoute>
                   <RoomManagement />
+                </AdminRoute>
+              }
+            />
+            <Route
+              path=""
+              element={
+                <AdminRoute>
+                  <WelcomeDashboard />
                 </AdminRoute>
               }
             />

@@ -43,6 +43,7 @@ const CreateSlotForm: React.FC = () => {
         <div className="mb-4">
           <label className="block mb-1">Room ID</label>
           <input
+            required
             type="text"
             name="room"
             value={formData.room}
@@ -53,6 +54,7 @@ const CreateSlotForm: React.FC = () => {
         <div className="mb-4">
           <label className="block mb-1">Date</label>
           <input
+            required
             type="date"
             name="date"
             value={formData.date}
@@ -63,6 +65,7 @@ const CreateSlotForm: React.FC = () => {
         <div className="mb-4">
           <label className="block mb-1">Start Time</label>
           <input
+            required
             type="time"
             name="startTime"
             value={formData.startTime}
@@ -73,6 +76,7 @@ const CreateSlotForm: React.FC = () => {
         <div className="mb-4">
           <label className="block mb-1">End Time</label>
           <input
+            required
             type="time"
             name="endTime"
             value={formData.endTime}
@@ -82,7 +86,7 @@ const CreateSlotForm: React.FC = () => {
         </div>
         <button
           type="submit"
-          className="bg-blue-500 text-white p-2 rounded-md w-full mt-2"
+          className="bg-blue-500 text-white p-2 rounded-xl w-full mt-2"
         >
           {isLoading ? "Processing..." : "Create Slots"}
         </button>

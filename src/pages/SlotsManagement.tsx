@@ -13,7 +13,6 @@ const SlotsManagement: React.FC = () => {
     >
       <h2 className="text-2xl font-bold text-center mb-6 mt-1">Create Slot</h2>
       <CreateSlotForm />
-      <h2 className="text-2xl font-bold text-center mb-6 mt-10">Slot List</h2>
       <SlotsListTable />
     </Card>
   );

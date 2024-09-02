@@ -64,7 +64,7 @@ const RoomManagement: React.FC = () => {
       title="Room Management"
       bordered={false}
       style={{ marginTop: 16 }}
-      className="mb-16"
+      className="mb-10"
     >
       <h2 className="text-2xl font-bold text-center mb-6 mt-1">Create Room</h2>
       <Form layout="vertical" onFinish={handleSubmit}>
@@ -150,7 +150,7 @@ const RoomManagement: React.FC = () => {
           Create Room
         </Button>
       </Form>
-      {!isLoading && rooms && <RoomListTable rooms={rooms} />}
+      {!isLoading && rooms && <RoomListTable />}
     </Card>
   );
 };

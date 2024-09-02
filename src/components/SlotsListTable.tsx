@@ -8,9 +8,10 @@ import {
   useUpdateSlotMutation,
 } from "../redux/api/slotsApi";
 import UpdateSlotPopup from "./UpdateSlotPopup";
+import { Button, Table, Popconfirm } from "antd";
 
 const SlotsListTable: React.FC = () => {
-  const { data: slots, error } = useGetAllSlotsQuery();
+  const { data: slots, error, isLoading } = useGetAllSlotsQuery();
   const [deleteSlot] = useDeleteSlotMutation();
   const [updateSlot] = useUpdateSlotMutation();
   const [selectedSlot, setSelectedSlot] = useState<Slot | null>(null);
@@ -46,45 +47,70 @@ const SlotsListTable: React.FC = () => {
   if (error) return <div>Error loading slots.</div>;
   if (slots?.data?.length === 0) return <h2>No slots available</h2>;
 
+  const columns = [
+    {
+      title: "Room Name",
+      dataIndex: ["room", "name"],
+      key: "roomName",
+    },
+    {
+      title: "Room No.",
+      dataIndex: ["room", "roomNo"],
+      key: "roomNo",
+    },
+    {
+      title: "Date",
+      dataIndex: "date",
+      key: "date",
+    },
+    {
+      title: "Start Time",
+      dataIndex: "startTime",
+      key: "startTime",
+    },
+    {
+      title: "End Time",
+      dataIndex: "endTime",
+      key: "endTime",
+    },
+    {
+      title: "Actions",
+      key: "actions",
+      render: (_text: string, record: Slot) => (
+        <span>
+          <Button
+            type="primary"
+            onClick={() => setSelectedSlot(record)}
+            className="m-1"
+          >
+            Update
+          </Button>
+          <Popconfirm
+            title="Are you sure you want to delete this slot?"
+            onConfirm={() => handleDelete(record._id)}
+            okText="Yes"
+            cancelText="No"
+          >
+            <button className="px-4 m-1 py-1 rounded-xl bg-red-500 text-white">
+              Delete
+            </button>
+          </Popconfirm>
+        </span>
+      ),
+    },
+  ];
+
   return (
     <div className="overflow-x-auto">
-      <table className="min-w-full bg-white rounded-xl">
-        <thead>
-          <tr>
-            <th className="py-2 px-4 text-center">Room Name</th>
-            <th className="py-2 px-4 text-center">Room No.</th>
-            <th className="py-2 px-4 text-center">Date</th>
-            <th className="py-2 px-4 text-center">Start Time</th>
-            <th className="py-2 px-4 text-center">End Time</th>
-            <th className="py-2 px-4 text-center">Actions</th>
-          </tr>
-        </thead>
-        <tbody>
-          {slots?.data?.map((slot: Slot) => (
-            <tr key={slot._id}>
-              <td className="border px-4 py-2">{slot?.room?.name}</td>
-              <td className="border px-4 py-2">{slot?.room?.roomNo}</td>
-              <td className="border px-4 py-2">{slot?.date}</td>
-              <td className="border px-4 py-2">{slot?.startTime}</td>
-              <td className="border px-4 py-2">{slot?.endTime}</td>
-              <td className="border px-4 py-2 flex justify-around gap-3">
-                <button
-                  onClick={() => setSelectedSlot(slot)}
-                  className="bg-yellow-500 text-white px-2 py-1 rounded-md"
-                >
-                  Update
-                </button>
-                <button
-                  onClick={() => handleDelete(slot?._id)}
-                  className="bg-red-500 text-white px-2 py-1 rounded-md"
-                >
-                  Delete
-                </button>
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
+      <h2 className="text-2xl font-bold text-center my-6">Slots List</h2>
+      <Table
+        columns={columns}
+        dataSource={slots?.data || []}
+        rowKey={(record) => record._id}
+        pagination={{ pageSize: 10 }}
+        loading={isLoading}
+        className="mx-12"
+      />
 
       {/* Show the Update Popup if a slot is selected */}
       {selectedSlot && (
