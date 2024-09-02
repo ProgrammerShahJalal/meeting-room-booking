@@ -32,13 +32,17 @@ export const handleStripePayment = async (
     }
 
     const response = await fetch(
-      "http://localhost:5000/api/create-checkout-session",
+      "https://meeting-room-booking-gilt.vercel.app/api/create-checkout-session",
       {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
+          date: bookingData.date,
+          slots: bookingData.slots,
+          room: bookingData.room,
+          user: bookingData.user,
           line_items: [
             {
               price_data: {
@@ -46,7 +50,7 @@ export const handleStripePayment = async (
                 product_data: {
                   name: "Booking",
                 },
-                unit_amount: totalAmount, // Ensure this is a valid integer
+                unit_amount: totalAmount * 100, // Ensure this is in cents
               },
               quantity: 1,
             },
