@@ -70,7 +70,7 @@ const Navbar = () => {
           <>
             {isAdmin ? (
               <Link
-                to="/dashboard"
+                to="/admin"
                 className="hover:text-green-500 active:text-purple-500 font-medium"
               >
                 Dashboard
@@ -152,7 +152,7 @@ const Navbar = () => {
               <>
                 {isAdmin ? (
                   <Link
-                    to="/dashboard"
+                    to="/admin"
                     className="hover:text-green-500"
                     onClick={toggleMenu}
                   >

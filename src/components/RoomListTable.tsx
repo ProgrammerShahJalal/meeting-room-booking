@@ -47,7 +47,8 @@ const RoomListTable: React.FC<RoomListTableProps> = ({ rooms }) => {
 
   return (
     <div className="overflow-x-auto">
-      <table className="min-w-full bg-white rounded-xl">
+      <h2 className="text-2xl font-bold text-center my-6">Room List</h2>
+      <table className="min-w-full bg-white rounded-xl ">
         <thead>
           <tr>
             <th className="py-2">Room Name</th>

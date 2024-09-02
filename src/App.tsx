@@ -1,4 +1,9 @@
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+  useLocation,
+} from "react-router-dom";
 import HomePage from "./pages/HomePage";
 import AboutUsPage from "./pages/AboutUsPage";
 import ContactUsPage from "./pages/ContactUsPage";
@@ -19,77 +24,113 @@ import ScrollToTopButton from "./components/ScrollToTopButton";
 import BookingPage from "./pages/BookingPage";
 import PaymentSuccess from "./pages/PaymentSuccess";
 import PaymentCancel from "./pages/PaymentCancel";
+import RoomManagement from "./pages/RoomManagement";
+import SlotsManagement from "./pages/SlotsManagement";
+import BookingManagement from "./components/BookingManagement";
 
-export default function App() {
+function App() {
+  const location = useLocation();
+  const hideFooter = location.pathname.startsWith("/admin");
+
   return (
-    <Router>
-      <div className="flex flex-col min-h-screen">
-        <Navbar />
-        <main className="flex-grow">
-          <Routes>
-            <Route path="/" element={<HomePage />} />
-            <Route path="/about-us" element={<AboutUsPage />} />
-            <Route path="/contact-us" element={<ContactUsPage />} />
-            <Route path="/meeting-rooms" element={<MeetingRoomsPage />} />
+    <div className="flex flex-col min-h-screen">
+      {!hideFooter && <Navbar />}
+      <main className="flex-grow">
+        <Routes>
+          <Route path="/" element={<HomePage />} />
+          <Route path="/about-us" element={<AboutUsPage />} />
+          <Route path="/contact-us" element={<ContactUsPage />} />
+          <Route path="/meeting-rooms" element={<MeetingRoomsPage />} />
+          <Route path="/signup" element={<SignUpPage />} />
+          <Route path="/login" element={<LoginPage />} />
+          <Route path="/room-details/:id" element={<RoomDetails />} />
+
+          {/* Private Routes */}
+          <Route
+            path="/my-bookings"
+            element={
+              <PrivateRoute>
+                <MyBookingPage />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/booking/:id"
+            element={
+              <PrivateRoute>
+                <BookingPage />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/payment-success"
+            element={
+              <PrivateRoute>
+                <PaymentSuccess />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/payment-cancel"
+            element={
+              <PrivateRoute>
+                <PaymentCancel />
+              </PrivateRoute>
+            }
+          />
+
+          {/* Admin Dashboard Routes */}
+          <Route
+            path="/admin"
+            element={
+              <AdminRoute>
+                <AdminDashboardMain />
+              </AdminRoute>
+            }
+          >
             <Route
-              path="/dashboard"
+              path="room-management"
               element={
                 <AdminRoute>
-                  <AdminDashboardMain />
+                  <RoomManagement />
                 </AdminRoute>
               }
             />
             <Route
-              path="/rooms/:id"
+              path="slot-management"
               element={
-                <PrivateRoute>
-                  <RoomDetails />
-                </PrivateRoute>
+                <AdminRoute>
+                  <SlotsManagement />
+                </AdminRoute>
               }
             />
             <Route
-              path="/book-room/:id"
+              path="booking-management"
               element={
-                <PrivateRoute>
-                  <BookingPage />
-                </PrivateRoute>
+                <AdminRoute>
+                  <BookingManagement />
+                </AdminRoute>
               }
             />
-            <Route
-              path="/my-bookings"
-              element={
-                <PrivateRoute>
-                  <MyBookingPage />
-                </PrivateRoute>
-              }
-            />
-            <Route
-              path="/success/"
-              element={
-                <PrivateRoute>
-                  <PaymentSuccess />
-                </PrivateRoute>
-              }
-            />
-            <Route
-              path="/cancel"
-              element={
-                <PrivateRoute>
-                  <PaymentCancel />
-                </PrivateRoute>
-              }
-            />
-            <Route path="/signup" element={<SignUpPage />} />
-            <Route path="/login" element={<LoginPage />} />
-            <Route path="/privacy-policy" element={<PrivacyPolicy />} />
-            <Route path="/termsOfService" element={<TermsOfService />} />
-            <Route path="*" element={<NotFoundPage />} />
-          </Routes>
-        </main>
-        {/* Scroll to Top Button */}
-        <ScrollToTopButton />
-        <Footer />
-      </div>
+          </Route>
+
+          <Route path="/privacy-policy" element={<PrivacyPolicy />} />
+          <Route path="/terms-of-service" element={<TermsOfService />} />
+
+          {/* Not Found Route */}
+          <Route path="*" element={<NotFoundPage />} />
+        </Routes>
+      </main>
+      {!hideFooter && <Footer />}
+      <ScrollToTopButton />
+    </div>
+  );
+}
+
+export default function AppWrapper() {
+  return (
+    <Router>
+      <App />
     </Router>
   );
 }

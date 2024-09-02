@@ -40,7 +40,6 @@ const CreateSlotForm: React.FC = () => {
         onSubmit={handleSubmit}
         className="p-4 rounded-md max-w-lg mx-auto mb-5"
       >
-        <h2 className="text-xl font-semibold mb-4">Create Slot</h2>
         <div className="mb-4">
           <label className="block mb-1">Room ID</label>
           <input

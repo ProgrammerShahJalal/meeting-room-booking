@@ -6,9 +6,12 @@ import {
 import { IoCheckmarkDoneCircleOutline } from "react-icons/io5";
 import { toast } from "sonner";
 import RoomListTable from "../components/RoomListTable";
+import { Button, Card, Input, Form, Row, Col } from "antd";
 
 const RoomManagement: React.FC = () => {
   const { data: rooms, isLoading } = useGetRoomsQuery();
+  const [createRoom] = useCreateRoomWithImageMutation();
+
   const [newRoom, setNewRoom] = useState({
     name: "",
     roomNo: 0,
@@ -19,8 +22,6 @@ const RoomManagement: React.FC = () => {
     imageUrl: "",
   });
 
-  const [createRoom] = useCreateRoomWithImageMutation();
-
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setNewRoom((prevRoom) => ({
@@ -28,40 +29,22 @@ const RoomManagement: React.FC = () => {
       [name]:
         name === "amenities"
           ? value.split(",")
-          : name === "roomNo" ||
-            name === "floorNo" ||
-            name === "capacity" ||
-            name === "pricePerSlot"
+          : ["roomNo", "floorNo", "capacity", "pricePerSlot"].includes(name)
           ? Number(value)
           : value,
     }));
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-
+  const handleSubmit = async () => {
     try {
-      const roomData = {
-        name: newRoom.name,
-        roomNo: newRoom.roomNo,
-        floorNo: newRoom.floorNo,
-        capacity: newRoom.capacity,
-        pricePerSlot: newRoom.pricePerSlot,
-        amenities: newRoom.amenities,
-        imageUrl: newRoom.imageUrl,
-      };
-
-      const response = await createRoom(roomData).unwrap();
-      console.log("Room created successfully:", response);
-
+      const response = await createRoom(newRoom).unwrap();
+      console.log("response", response);
       toast("Success!", {
         className: "border-green-500 text-base",
         description: "Room created successfully",
         duration: 3000,
         icon: <IoCheckmarkDoneCircleOutline />,
       });
-
-      // Reset form
       setNewRoom({
         name: "",
         roomNo: 0,
@@ -77,112 +60,98 @@ const RoomManagement: React.FC = () => {
   };
 
   return (
-    <div className="px-12 py-16 bg-purple-100">
-      <h1 className="text-2xl font-bold text-center mb-6">Room Management</h1>
-
-      {/* Create Room Form */}
-      <div className="mb-6">
-        <h2 className="text-xl font-semibold text-center mb-4">Create Room</h2>
-        <form onSubmit={handleSubmit}>
-          <div className="grid grid-cols-2 gap-4">
-            <div>
-              <label className="block mb-1 font-medium">Room Name</label>
-              <input
-                type="text"
+    <Card
+      title="Room Management"
+      bordered={false}
+      style={{ marginTop: 16 }}
+      className="mb-16"
+    >
+      <h2 className="text-2xl font-bold text-center mb-6 mt-1">Create Room</h2>
+      <Form layout="vertical" onFinish={handleSubmit}>
+        <Row gutter={16}>
+          <Col span={12}>
+            <Form.Item label="Room Name">
+              <Input
                 name="name"
                 placeholder="Room Name"
                 value={newRoom.name}
                 onChange={handleInputChange}
-                className="border p-2 rounded-md w-full"
               />
-            </div>
-
-            <div>
-              <label className="block mb-1 font-medium">Room No.</label>
-              <input
+            </Form.Item>
+          </Col>
+          <Col span={12}>
+            <Form.Item label="Room No.">
+              <Input
                 type="number"
                 name="roomNo"
                 placeholder="Room No."
                 value={newRoom.roomNo}
                 onChange={handleInputChange}
-                className="border p-2 rounded-md w-full"
               />
-            </div>
-
-            <div>
-              <label className="block mb-1 font-medium">Floor No.</label>
-              <input
+            </Form.Item>
+          </Col>
+        </Row>
+        <Row gutter={16}>
+          <Col span={12}>
+            <Form.Item label="Floor No.">
+              <Input
                 type="number"
                 name="floorNo"
                 placeholder="Floor No."
                 value={newRoom.floorNo}
                 onChange={handleInputChange}
-                className="border p-2 rounded-md w-full"
               />
-            </div>
-
-            <div>
-              <label className="block mb-1 font-medium">Capacity</label>
-              <input
+            </Form.Item>
+          </Col>
+          <Col span={12}>
+            <Form.Item label="Capacity">
+              <Input
                 type="number"
                 name="capacity"
                 placeholder="Capacity"
                 value={newRoom.capacity}
                 onChange={handleInputChange}
-                className="border p-2 rounded-md w-full"
               />
-            </div>
-
-            <div>
-              <label className="block mb-1 font-medium">Price Per Slot</label>
-              <input
+            </Form.Item>
+          </Col>
+        </Row>
+        <Row gutter={16}>
+          <Col span={12}>
+            <Form.Item label="Price Per Slot">
+              <Input
                 type="number"
                 name="pricePerSlot"
                 placeholder="Price Per Slot"
                 value={newRoom.pricePerSlot}
                 onChange={handleInputChange}
-                className="border p-2 rounded-md w-full"
               />
-            </div>
-
-            <div className="col-span-2">
-              <label className="block mb-1 font-medium">Amenities</label>
-              <input
-                type="text"
+            </Form.Item>
+          </Col>
+          <Col span={12}>
+            <Form.Item label="Amenities">
+              <Input
                 name="amenities"
                 placeholder="Amenities (comma separated)"
                 value={newRoom.amenities.join(",")}
                 onChange={handleInputChange}
-                className="border p-2 rounded-md w-full"
               />
-            </div>
-
-            <div>
-              <label className="block mb-1 font-medium">Room Image URL</label>
-              <input
-                type="text"
-                name="imageUrl" // Corrected the name attribute
-                placeholder="Room Image URL"
-                value={newRoom.imageUrl}
-                onChange={handleInputChange}
-                className="border p-2 rounded-md w-full"
-              />
-            </div>
-          </div>
-          <button
-            type="submit"
-            className="mt-4 bg-blue-500 text-white px-4 py-2 rounded-md"
-          >
-            Create Room
-          </button>
-        </form>
-      </div>
-
-      {/* Other Room Management components */}
-
-      {/* Room List Table */}
+            </Form.Item>
+          </Col>
+        </Row>
+        <Form.Item label="Room Image URL">
+          <Input
+            name="imageUrl"
+            placeholder="Room Image URL"
+            value={newRoom.imageUrl}
+            onChange={handleInputChange}
+          />
+        </Form.Item>
+        <Button type="primary" htmlType="submit">
+          Create Room
+        </Button>
+      </Form>
       {!isLoading && rooms && <RoomListTable rooms={rooms} />}
-    </div>
+    </Card>
   );
 };
 

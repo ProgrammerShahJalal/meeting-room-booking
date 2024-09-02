@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { useState } from "react";
-import { Button, Table, Modal, notification } from "antd";
+import { Button, Table, Modal, notification, Card } from "antd";
 import {
   useDeleteBookingMutation,
   useGetAllBookingsQuery,
@@ -85,9 +85,18 @@ const BookingManagement: React.FC = () => {
       title: "Status",
       dataIndex: "isConfirmed",
       key: "status",
-      render: (status: string) =>
-        status === "confirmed" ? "Confirmed" : "Unconfirmed",
+      render: (status: string) => (
+        <span
+          style={{
+            color: status === "confirmed" ? "green" : "red",
+            fontWeight: "500",
+          }}
+        >
+          {status === "confirmed" ? "Confirmed" : "Unconfirmed"}
+        </span>
+      ),
     },
+
     {
       title: "Actions",
       key: "actions",
@@ -97,6 +106,7 @@ const BookingManagement: React.FC = () => {
             type="primary"
             onClick={() => handleApprove(record._id)}
             disabled={record.isConfirmed === "confirmed"}
+            className="m-1"
           >
             Approve
           </Button>
@@ -104,12 +114,12 @@ const BookingManagement: React.FC = () => {
             type="default"
             onClick={() => handleReject(record._id)}
             disabled={record.isConfirmed === "unconfirmed"}
-            className="mx-2"
+            className="m-1"
           >
             Reject
           </Button>
           <button
-            className="px-4 py-1 rounded-xl bg-red-500 text-white"
+            className="px-4 m-1 py-1 rounded-xl bg-red-500 text-white"
             onClick={() => handleDelete(record._id)}
           >
             Delete
@@ -120,10 +130,8 @@ const BookingManagement: React.FC = () => {
   ];
 
   return (
-    <>
-      <h2 className="text-2xl font-bold text-center mb-6 mt-10">
-        Booking Management
-      </h2>
+    <Card title="Booking Management" bordered={false} style={{ marginTop: 16 }}>
+      <h2 className="text-2xl font-bold text-center mb-6 mt-1">Booking List</h2>
       <Table
         scroll={{ x: true }}
         pagination={{ pageSize: 10 }}
@@ -144,7 +152,7 @@ const BookingManagement: React.FC = () => {
       >
         <p>Are you sure you want to delete this booking?</p>
       </Modal>
-    </>
+    </Card>
   );
 };
 

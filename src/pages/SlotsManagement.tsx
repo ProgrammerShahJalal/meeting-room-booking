@@ -1,16 +1,21 @@
 import React from "react";
+import { Card } from "antd";
 import CreateSlotForm from "../components/CreateSlotForm";
 import SlotsListTable from "../components/SlotsListTable";
 
 const SlotsManagement: React.FC = () => {
   return (
-    <div className="px-12 py-16 bg-purple-100">
-      <h1 className="text-2xl font-bold text-center mb-6 mt-12">
-        Slots Management
-      </h1>
+    <Card
+      title="Slots Management"
+      bordered={false}
+      style={{ marginTop: 16 }}
+      className="mb-16"
+    >
+      <h2 className="text-2xl font-bold text-center mb-6 mt-1">Create Slot</h2>
       <CreateSlotForm />
+      <h2 className="text-2xl font-bold text-center mb-6 mt-10">Slot List</h2>
       <SlotsListTable />
-    </div>
+    </Card>
   );
 };
 
