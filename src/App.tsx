@@ -55,7 +55,7 @@ function App() {
             }
           />
           <Route
-            path="/room-details/:id"
+            path="/rooms/:id"
             element={
               <PrivateRoute>
                 <RoomDetails />

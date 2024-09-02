@@ -71,8 +71,6 @@ const MeetingRoomsPage = () => {
       </div>
     );
 
-  if (rooms?.data?.length === 0) return <p>No Rooms available right now!</p>;
-
   return (
     <section className="py-12 bg-pink-100">
       <div className="container mx-auto text-center">
@@ -114,6 +112,7 @@ const MeetingRoomsPage = () => {
             Clear Filters
           </button>
         </div>
+        {filteredRooms?.length === 0 && <p>No Rooms available right now!</p>}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {filteredRooms?.map((room: Room) => (
             <div
