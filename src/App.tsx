@@ -44,7 +44,6 @@ function App() {
           <Route path="/meeting-rooms" element={<MeetingRoomsPage />} />
           <Route path="/signup" element={<SignUpPage />} />
           <Route path="/login" element={<LoginPage />} />
-          <Route path="/room-details/:id" element={<RoomDetails />} />
 
           {/* Private Routes */}
           <Route
@@ -52,6 +51,14 @@ function App() {
             element={
               <PrivateRoute>
                 <MyBookingPage />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/room-details/:id"
+            element={
+              <PrivateRoute>
+                <RoomDetails />
               </PrivateRoute>
             }
           />

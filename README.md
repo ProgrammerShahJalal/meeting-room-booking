@@ -10,9 +10,9 @@ The Meeting Room Booking System is a user-friendly platform designed for booking
 
 ## Technologies Used:
 
-- Frontend: React, Redux, Redux Toolkit, React Router, TailwindCSS, Shadcn, antd, Framer Motion, React Lottie, React Icons, React Calender, React Date Picker, React Slick/ Carosoul, Sonner, Strpe Payment Gateway.
+- Frontend: Typescript, React, Redux, Redux Toolkit, React Router, TailwindCSS, Shadcn, antd, Framer Motion, React Lottie, React Icons, React Calender, React Date Picker, React Slick/ Carosoul, Sonner, Strpe Payment Gateway.
 
-- Backend: Node.js, Express.js, MongoDB, Mongoose, JWT, Zod, Bcrypt, Stripe
+- Backend: Typescript, Node.js, Express.js, MongoDB, Mongoose, JWT, Zod, Bcrypt, Stripe
 
 ## Features
 
