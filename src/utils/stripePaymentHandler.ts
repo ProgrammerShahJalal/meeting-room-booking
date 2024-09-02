@@ -50,7 +50,7 @@ export const handleStripePayment = async (
                 product_data: {
                   name: "Booking",
                 },
-                unit_amount: totalAmount * 100, // Ensure this is in cents
+                unit_amount: totalAmount,
               },
               quantity: 1,
             },
