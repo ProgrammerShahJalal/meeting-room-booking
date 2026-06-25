@@ -8,6 +8,19 @@ The Meeting Room Booking System is a user-friendly platform designed for booking
 
 ## Server Link: https://meeting-room-booking-gilt.vercel.app
 
+---
+
+## 🎬 Project walkthrough video
+
+> **▶️ Watch the full overview:** **https://youtu.be/XJ40tBMbo78**
+
+A complete tour of Meeting Room Booking System. Click the
+thumbnail to play:
+
+[![CollabFlow — full project overview (click to watch)](https://img.youtube.com/vi/XJ40tBMbo78/maxresdefault.jpg)](https://youtu.be/XJ40tBMbo78)
+
+---
+
 ## Technologies Used:
 
 - Frontend: Typescript, React, Redux, Redux Toolkit, React Router, TailwindCSS, Shadcn, antd, Framer Motion, React Lottie, React Icons, React Calender, React Date Picker, React Slick/ Carosoul, Sonner, Strpe Payment Gateway.
