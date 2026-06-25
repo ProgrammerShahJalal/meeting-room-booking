@@ -17,7 +17,7 @@ The Meeting Room Booking System is a user-friendly platform designed for booking
 A complete tour of Meeting Room Booking System. Click the
 thumbnail to play:
 
-[![CollabFlow — full project overview (click to watch)](https://img.youtube.com/vi/XJ40tBMbo78/maxresdefault.jpg)](https://youtu.be/XJ40tBMbo78)
+[![Meeting Room Booking System — full project overview (click to watch)](https://img.youtube.com/vi/XJ40tBMbo78/maxresdefault.jpg)](https://youtu.be/XJ40tBMbo78)
 
 ---
 
